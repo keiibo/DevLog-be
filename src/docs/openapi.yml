@@ -1,0 +1,114 @@
+openapi: 3.0.0
+info:
+  title: DevLog API
+  description: DevLogで使用するAPI
+  version: "1.0"
+servers:
+  - url: http://localhost:4001/
+    description: Production server
+paths:
+  # Health Check
+  /api/health-check:
+    get:
+      tags: ["HealthCheck"]
+      summary: ヘルスチェック
+      description: 正常に動作しているかを確認する.
+      responses:
+        200:
+          description: 正常
+
+  # Project一覧の取得
+  /api/project:
+    get:
+      summary: 全プロジェクトの一覧を取得
+      operationId: listProjects
+      tags:
+        - Project
+      responses:
+        "200":
+          description: プロジェクトの一覧が正常に取得されました。
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+        "500":
+          description: "サーバー側のエラーによりプロジェクトの一覧を取得できませんでした。"
+    post:
+      summary: 新規プロジェクトの作成
+      operationId: createProject
+      tags:
+        - Project
+      requestBody:
+        description: "新規作成するプロジェクトのデータ"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - detail
+                - limitDate
+              properties:
+                name:
+                  type: string
+                  description: "プロジェクト名"
+                detail:
+                  type: string
+                  description: "プロジェクトの詳細"
+                limitDate:
+                  type: string
+                  format: date
+                  description: "プロジェクトの期限日"
+      responses:
+        201:
+          description: "プロジェクトが正常に作成されました。"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        400:
+          description: "無効なリクエストです。"
+  # PJの詳細取得
+  /api/project/{projectId}:
+    get:
+      summary: 指定されたプロジェクトの詳細が返されます
+      operationId: getProject
+      tags:
+        - Project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: 取得したいプロジェクトのID。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: プロジェクトが返される
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: Project not found
+
+components:
+  schemas:
+    Project:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: プロジェクトのユニークなID
+        name:
+          type: string
+          description: プロジェクト名
+        detail:
+          type: string
+          description: プロジェクト詳細
+        limitDate:
+          type: string
+          description: プロジェクトの期限日
