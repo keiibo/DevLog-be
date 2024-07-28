@@ -95,8 +95,62 @@ paths:
         "404":
           description: Project not found
 
+  #チケットの新規作成
+  /api/tickets:
+    post:
+      tags: ["Ticket"]
+      summary: タスクチケットの新規作成
+      description: チケットを新規作成する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+              $ref: "#/components/schemas/Ticket"
+      responses:
+        "200":
+          description: "チケット作成成功時"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+    # チケット取得
+    get:
+      tags: ["Ticket"]
+      summary: チケット一覧の取得
+      description: projectIdに紐づくチケットを取得
+      parameters:
+        - in: query
+          name: projectId
+          required: true
+          schema:
+            type: string
+          description: The project ID to retrieve tickets for.
+      responses:
+        "200":
+          description: Successfully retrieved the tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Ticket"
+        "404":
+          description: No tickets found for the specified project ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: "チケットが取得できませんでした"
+
 components:
   schemas:
+    # プロジェクト
     Project:
       type: object
       properties:
@@ -112,3 +166,50 @@ components:
         limitDate:
           type: string
           description: プロジェクトの期限日
+    # チケット
+    Ticket:
+      type: object
+      required:
+        - _id
+        - projectId
+        - labelColorType
+        - title
+        - isDeletable
+        - priority
+        - status
+      properties:
+        _id:
+          type: number
+        projectId:
+          type: string
+        labelColorType:
+          type: string
+          enum:
+            - white
+            - lightBlue
+            - blue
+            - red
+        title:
+          type: string
+        isDeletable:
+          type: boolean
+        limitStartYm:
+          type: string
+          format: date
+          nullable: true
+        limitEndYm:
+          type: string
+          format: date
+          nullable: true
+        priority:
+          type: string
+          enum:
+            - high
+            - medium
+            - low
+        status:
+          type: string
+          enum:
+            - notStarted
+            - underConstruction
+            - completed
