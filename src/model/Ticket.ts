@@ -23,7 +23,7 @@ const Statuses = {
 /**
  * Ticketモデルのスキーマ定義です。
  * @typedef {Object} Ticket
- * @property {Number} _id チケットのID
+ * @property {String} ticketId チケットID
  * @property {String} projectId プロジェクトID
  * @property {String} labelColorType ラベルの色タイプ
  * @property {String} title タイトル
@@ -35,7 +35,7 @@ const Statuses = {
  */
 const ticketSchema = new mongoose.Schema(
   {
-    _id: { type: Number, required: true },
+    ticketId: { type: String, required: true, unique: true },
     projectId: { type: String, required: true },
     labelColorType: {
       type: String,

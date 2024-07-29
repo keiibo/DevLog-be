@@ -17,8 +17,13 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       priority,
       status,
     } = req.body;
+
+    const sequenceNumber = await getNextSequence(projectId);
+    const ticketId = `${projectId}-${sequenceNumber}`;
+
     const newTicket = new Ticket({
-      _id: await getNextSequence(CounterType.TICKET),
+      // _id を指定せず、自動生成される ObjectId を利用
+      ticketId, // カスタムフィールドとして ticketId を使用
       projectId,
       labelColorType,
       title,

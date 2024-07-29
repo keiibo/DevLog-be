@@ -9,8 +9,8 @@ const postProject = async (
   res: express.Response
 ): Promise<void> => {
   try {
-    const { name, detail, limitDate } = req.body;
-    const newProject = new Project({ name, detail, limitDate });
+    const { name, detail, limitDate, projectId } = req.body;
+    const newProject = new Project({ name, detail, limitDate, projectId });
     await newProject.save();
     res.status(201).send(newProject);
   } catch (error: any) {

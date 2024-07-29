@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-export const getNextSequence = async (name: string) => {
+export const getNextSequence = async (projectId: string) => {
   const result = await Counter.findOneAndUpdate(
-    { _id: name },
+    { projectId: projectId },
     { $inc: { seq: 1 } },
     { new: true, upsert: true }
   );
@@ -10,7 +10,7 @@ export const getNextSequence = async (name: string) => {
 };
 
 const counterSchema = new mongoose.Schema({
-  _id: { type: String, required: true },
+  projectId: { type: String, required: true },
   seq: { type: Number, default: 0 },
 });
 

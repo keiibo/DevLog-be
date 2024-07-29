@@ -13,6 +13,7 @@ const projectSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     detail: { type: String, required: true },
+    projectId: { type: String, required: true },
     limitDate: { type: Date, required: true },
   },
   { collection: "Projects" }
