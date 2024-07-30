@@ -27,6 +27,7 @@ const Statuses = {
  * @property {String} projectId プロジェクトID
  * @property {String} labelColorType ラベルの色タイプ
  * @property {String} title タイトル
+ * @property {String} detail 詳細
  * @property {Boolean} isDeletable 削除可能かどうか
  * @property {String} limitStartYm 開始期限 (オプション)
  * @property {String} limitEndYm 終了期限 (オプション)
@@ -43,6 +44,7 @@ const ticketSchema = new mongoose.Schema(
       enum: Object.values(LabelColorTypes),
     },
     title: { type: String, required: true },
+    detail: { type: String, required: true },
     isDeletable: { type: Boolean, required: true },
     limitStartYm: { type: String },
     limitEndYm: { type: String },

@@ -11,6 +11,7 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       projectId,
       labelColorType,
       title,
+      detail,
       isDeletable,
       limitStartYm,
       limitEndYm,
@@ -27,6 +28,7 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       projectId,
       labelColorType,
       title,
+      detail,
       isDeletable,
       limitStartYm,
       limitEndYm,
@@ -61,8 +63,8 @@ const getTicket = async (req: express.Request, res: express.Response) => {
     if (!ticketId) {
       return res.status(400).send("チケットIDが正しくありません");
     }
-    const tickets = await Ticket.find({ ticketId: ticketId });
-    res.status(200).send(tickets);
+    const ticket = await Ticket.findOne({ ticketId: ticketId });
+    res.status(200).send(ticket);
   } catch (error: any) {
     console.error(error);
     res.status(500).send(error.message);

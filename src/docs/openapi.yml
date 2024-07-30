@@ -214,6 +214,8 @@ components:
             - red
         title:
           type: string
+        detail:
+          type: string
         isDeletable:
           type: boolean
         limitStartYm:
