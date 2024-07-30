@@ -34,5 +34,9 @@ router.post("/tickets", ticket.postTicket);
  * GET; チケット全件取得
  */
 router.get("/tickets", ticket.getAllTickets);
+/**
+ * GET; チケット1件詳細取得
+ */
+router.get("/tickets/:ticketId", ticket.getTicket);
 
 export default router;

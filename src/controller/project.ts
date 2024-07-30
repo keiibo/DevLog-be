@@ -28,8 +28,6 @@ const getAllProject = async (
 ): Promise<void> => {
   try {
     const projects = await Project.find();
-    console.log(projects);
-
     res.status(200).json(projects);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -45,8 +43,6 @@ const getProject = async (
 ): Promise<void> => {
   try {
     const { projectId } = req.params;
-    console.log(projectId);
-
     const project = await Project.findById(projectId);
     if (!project) {
       res.status(404).json({ message: "Project not found" });

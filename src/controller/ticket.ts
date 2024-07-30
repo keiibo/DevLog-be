@@ -55,7 +55,22 @@ const getAllTickets = async (req: express.Request, res: express.Response) => {
   }
 };
 
+const getTicket = async (req: express.Request, res: express.Response) => {
+  try {
+    const { ticketId } = req.params;
+    if (!ticketId) {
+      return res.status(400).send("チケットIDが正しくありません");
+    }
+    const tickets = await Ticket.find({ ticketId: ticketId });
+    res.status(200).send(tickets);
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+};
+
 export default {
   postTicket,
   getAllTickets,
+  getTicket,
 };
