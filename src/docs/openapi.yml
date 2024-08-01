@@ -108,7 +108,7 @@ paths:
             schema:
               type: object
               properties:
-              $ref: "#/components/schemas/Ticket"
+              $ref: "#/components/schemas/TicketCreateRequest"
       responses:
         "200":
           description: "チケット作成成功時"
@@ -153,12 +153,40 @@ paths:
       summary: ticketIdからチケットの詳細を取得する
       description: ticketIdからチケットの詳細を取得する
       parameters:
+        - name: ticketId
+          in: path
+          required: true
+          description: チケットId
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+        "400":
+          description: チケットIdが無効です
+        "500":
+          description: Internal server error
+    put:
+      tags: ["Ticket"]
+      summary: チケットの更新
+      description: ticketIdからチケットを更新する
+      parameters:
         - in: path
           name: ticketId
           required: true
           schema:
             type: string
           description: チケットId
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketUpdateRequest"
       responses:
         "200":
           description: 成功
@@ -195,6 +223,8 @@ components:
       required:
         - _id
         - projectId
+        - ticketId
+        - detail
         - labelColorType
         - title
         - isDeletable
@@ -205,6 +235,8 @@ components:
           type: number
         projectId:
           type: string
+        ticketId:
+          type: string
         labelColorType:
           type: string
           enum:
@@ -212,6 +244,99 @@ components:
             - lightBlue
             - blue
             - red
+        title:
+          type: string
+        detail:
+          type: string
+        isDeletable:
+          type: boolean
+        limitStartYm:
+          type: string
+          format: date
+          nullable: true
+        limitEndYm:
+          type: string
+          format: date
+          nullable: true
+        priority:
+          type: string
+          enum:
+            - high
+            - medium
+            - low
+        status:
+          type: string
+          enum:
+            - notStarted
+            - underConstruction
+            - completed
+
+    TicketCreateRequest:
+      type: object
+      required:
+        - projectId
+        - detail
+        - labelColorType
+        - title
+        - isDeletable
+        - priority
+        - status
+      properties:
+        projectId:
+          type: string
+        labelColorType:
+          type: string
+          enum:
+            - white
+            - lightBlue
+            - blue
+            - red
+        title:
+          type: string
+        detail:
+          type: string
+        isDeletable:
+          type: boolean
+        limitStartYm:
+          type: string
+          format: date
+          nullable: true
+        limitEndYm:
+          type: string
+          format: date
+          nullable: true
+        priority:
+          type: string
+          enum:
+            - high
+            - medium
+            - low
+        status:
+          type: string
+          enum:
+            - notStarted
+            - underConstruction
+            - completed
+
+    TicketUpdateRequest:
+      type: object
+      required:
+        - projectId
+        - detail
+        - labelColorType
+        - title
+        - isDeletable
+        - priority
+        - status
+      properties:
+        projectId:
+          type: string
+        labelColorType:
+          type: string
+          enum:
+            - white
+            - lightBlue
+            - blue
         title:
           type: string
         detail:

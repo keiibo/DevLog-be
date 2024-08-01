@@ -43,6 +43,26 @@ const postTicket = async (req: express.Request, res: express.Response) => {
   }
 };
 
+const updateTicket = async (req: express.Request, res: express.Response) => {
+  try {
+    const { ticketId } = req.params;
+    const updateData = req.body;
+
+    const updatedTicket = await Ticket.findOneAndUpdate(
+      { ticketId: ticketId },
+      updateData,
+      { new: true } // 更新後のドキュメントを返す
+    );
+    if (!updatedTicket) {
+      return res.status(404).send("指定されたチケットIDが見つかりません");
+    }
+    res.status(200).send(updatedTicket);
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+};
+
 const getAllTickets = async (req: express.Request, res: express.Response) => {
   try {
     const { projectId } = req.query;
@@ -75,4 +95,5 @@ export default {
   postTicket,
   getAllTickets,
   getTicket,
+  updateTicket,
 };

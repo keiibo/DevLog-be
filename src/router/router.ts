@@ -38,5 +38,9 @@ router.get("/tickets", ticket.getAllTickets);
  * GET; チケット1件詳細取得
  */
 router.get("/tickets/:ticketId", ticket.getTicket);
+/**
+ * PUT; チケットの更新
+ */
+router.put("/tickets/:ticketId", ticket.updateTicket);
 
 export default router;
