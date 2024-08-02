@@ -42,5 +42,9 @@ router.get("/tickets/:ticketId", ticket.getTicket);
  * PUT; チケットの更新
  */
 router.put("/tickets/:ticketId", ticket.updateTicket);
+/**
+ * DELETE: チケットの更新
+ */
+router.delete("/tickets/:ticketId", ticket.deleteTicket);
 
 export default router;

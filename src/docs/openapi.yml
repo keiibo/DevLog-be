@@ -198,6 +198,28 @@ paths:
           description: チケットIdが無効です
         "500":
           description: Internal server error
+    delete:
+      tags: ["Ticket"]
+      summary: チケットの削除
+      description: ticketIdからチケットを削除する
+      parameters:
+        - in: path
+          name: ticketId
+          required: true
+          schema:
+            type: string
+          description: チケットId
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+        "400":
+          description: チケットIdが無効です
+        "500":
+          description: Internal server error
 
 components:
   schemas:

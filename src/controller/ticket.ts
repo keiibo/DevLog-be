@@ -43,6 +43,9 @@ const postTicket = async (req: express.Request, res: express.Response) => {
   }
 };
 
+/**
+ * チケットの更新
+ */
 const updateTicket = async (req: express.Request, res: express.Response) => {
   try {
     const { ticketId } = req.params;
@@ -63,6 +66,9 @@ const updateTicket = async (req: express.Request, res: express.Response) => {
   }
 };
 
+/**
+ * projectIdに紐づくチケット一覧の取得
+ */
 const getAllTickets = async (req: express.Request, res: express.Response) => {
   try {
     const { projectId } = req.query;
@@ -77,6 +83,9 @@ const getAllTickets = async (req: express.Request, res: express.Response) => {
   }
 };
 
+/**
+ * チケットIDをもとにチケットの詳細情報を取得する
+ */
 const getTicket = async (req: express.Request, res: express.Response) => {
   try {
     const { ticketId } = req.params;
@@ -91,9 +100,27 @@ const getTicket = async (req: express.Request, res: express.Response) => {
   }
 };
 
+/**
+ * チケットの削除
+ */
+const deleteTicket = async (req: express.Request, res: express.Response) => {
+  try {
+    const { ticketId } = req.params;
+    if (!ticketId) {
+      return res.status(400).send("チケットIDが正しくありません");
+    }
+    const ticket = await Ticket.findOneAndDelete({ ticketId: ticketId });
+    res.status(200).send(ticket);
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+};
+
 export default {
   postTicket,
   getAllTickets,
   getTicket,
   updateTicket,
+  deleteTicket,
 };
