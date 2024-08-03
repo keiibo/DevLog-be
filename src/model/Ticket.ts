@@ -44,7 +44,7 @@ const ticketSchema = new mongoose.Schema(
       enum: Object.values(LabelColorTypes),
     },
     title: { type: String, required: true },
-    detail: { type: String, required: true },
+    detail: { type: String },
     isDeletable: { type: Boolean, required: true },
     limitStartYm: { type: String },
     limitEndYm: { type: String },
