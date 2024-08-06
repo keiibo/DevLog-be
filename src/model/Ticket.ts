@@ -6,6 +6,8 @@ const LabelColorTypes = {
   LIGHT_BLUE: "lightBlue",
   BLUE: "blue",
   RED: "red",
+  GREEN: "green",
+  PURPLE: "purple",
 };
 
 const Priorities = {

@@ -2,6 +2,7 @@ import express from "express";
 import healthCheck from "../controller/healthCheck";
 import project from "../controller/project";
 import ticket from "../controller/ticket";
+import user from "../controller/user";
 
 const router = express.Router();
 
@@ -46,5 +47,7 @@ router.put("/tickets/:ticketId", ticket.updateTicket);
  * DELETE: チケットの更新
  */
 router.delete("/tickets/:ticketId", ticket.deleteTicket);
+
+router.post("/user", user.postUser);
 
 export default router;
