@@ -37,7 +37,6 @@ paths:
                 email:
                   type: string
                   description: email
-
       responses:
         "200":
           description: "ユーザー作成成功時"
@@ -47,6 +46,57 @@ paths:
                 $ref: "#/components/schemas/User"
         "500":
           description: Internal server error
+  /api/login:
+    post:
+      tags: ["Login"]
+      summary: ログイン
+      description: Emailかパスワードでログイン
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - identifier
+                - password
+              properties:
+                identifier:
+                  type: string
+                  description: email or id
+                password:
+                  type: string
+                  description: パスワード
+              example:
+                identifier: user@example.com
+                password: passw0rd
+      responses:
+        "200":
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    description: The user's unique identifier
+                  userName:
+                    type: string
+                    description: The user's name
+                  email:
+                    type: string
+                    description: The user's email address
+                example:
+                  userId: "12345"
+                  userName: "John Doe"
+                  email: "user@example.com"
+        "401":
+          description: Unauthorized - Incorrect password or identifier
+        "404":
+          description: User not found
+        "500":
+          description: Server error
 
   # Health Check
   /api/health-check:

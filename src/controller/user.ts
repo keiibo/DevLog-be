@@ -5,7 +5,7 @@ import User from "../model/User";
 /**
  * ユーザーの新規作成
  */
-const postUser = async (req: express.Request, res: express.Response) => {
+const createUser = async (req: express.Request, res: express.Response) => {
   try {
     const { userId, userName, email, password } = req.body;
 
@@ -39,4 +39,40 @@ const postUser = async (req: express.Request, res: express.Response) => {
   }
 };
 
-export default { postUser };
+/**
+ * ユーザーのログイン
+ */
+const loginUser = async (req: express.Request, res: express.Response) => {
+  try {
+    const { identifier, password } = req.body; // identifierはuserIdまたはemail
+
+    // ユーザー識別子がメールアドレスかどうかを判別
+    const isEmail = identifier.includes("@");
+
+    // ユーザーを検索（メールアドレスかユーザーIDのどちらかで検索）
+    let query = isEmail ? { email: identifier } : { userId: identifier };
+    const user = await User.findOne(query);
+
+    if (!user) {
+      return res.status(404).send("ユーザーが見つかりません。");
+    }
+
+    // パスワードの確認
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    if (!isMatch) {
+      return res.status(401).send("パスワードが正しくありません。");
+    }
+
+    // ログイン成功
+    res.status(200).send({
+      userId: user.userId,
+      userName: user.userName,
+      email: user.email,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("サーバーエラーです。");
+  }
+};
+
+export default { createUser, loginUser };

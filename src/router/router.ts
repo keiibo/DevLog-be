@@ -47,7 +47,13 @@ router.put("/tickets/:ticketId", ticket.updateTicket);
  * DELETE: チケットの更新
  */
 router.delete("/tickets/:ticketId", ticket.deleteTicket);
-
-router.post("/user", user.postUser);
+/**
+ * POST: ユーザー新規作成
+ */
+router.post("/user", user.createUser);
+/**
+ * POST: ユーザーログイン
+ */
+router.post("/login", user.loginUser);
 
 export default router;
