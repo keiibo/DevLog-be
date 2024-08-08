@@ -156,6 +156,8 @@ paths:
                 - name
                 - detail
                 - limitDate
+                - projectId
+                - userId
               properties:
                 name:
                   type: string
@@ -167,6 +169,9 @@ paths:
                   type: string
                   format: date
                   description: "プロジェクトの期限日"
+                projectId:
+                  type: string
+                  description: "プロジェクトのID"
                 userId:
                   type: string
                   description: "ユーザーID"
