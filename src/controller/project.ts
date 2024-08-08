@@ -1,5 +1,6 @@
 import express from "express";
 import Project from "../model/Project";
+import User from "../model/User";
 
 /**
  * プロジェクトの新規作成
@@ -9,8 +10,15 @@ const postProject = async (
   res: express.Response
 ): Promise<void> => {
   try {
-    const { name, detail, limitDate, projectId } = req.body;
-    const newProject = new Project({ name, detail, limitDate, projectId });
+    const { name, detail, limitDate, projectId, userId } = req.body;
+    const user = await User.findOne({ userId });
+    const newProject = new Project({
+      name,
+      detail,
+      limitDate,
+      projectId,
+      userId: user?._id,
+    });
     await newProject.save();
     res.status(201).send(newProject);
   } catch (error: any) {
@@ -26,8 +34,14 @@ const getAllProject = async (
   req: express.Request,
   res: express.Response
 ): Promise<void> => {
+  const { userId } = req.params;
+
+  const user = await User.findOne({ userId });
+
   try {
-    const projects = await Project.find();
+    const projects = await Project.find({
+      userId: user?._id,
+    });
     res.status(200).json(projects);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

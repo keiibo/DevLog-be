@@ -87,10 +87,15 @@ paths:
                   email:
                     type: string
                     description: The user's email address
+                  projectIds:
+                    type: array
+                    items:
+                      type: string
                 example:
                   userId: "12345"
                   userName: "John Doe"
                   email: "user@example.com"
+                  projectIds: ["DVLG", "DVLG2"]
         "401":
           description: Unauthorized - Incorrect password or identifier
         "404":
@@ -109,12 +114,20 @@ paths:
           description: 正常
 
   # Project一覧の取得
-  /api/project:
+  /api/project/all/{userId}:
     get:
-      summary: 全プロジェクトの一覧を取得
+      summary: ユーザーに紐づく全プロジェクトの一覧を取得
       operationId: listProjects
       tags:
         - Project
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ユーザーID
+          schema:
+            type: string
+
       responses:
         "200":
           description: プロジェクトの一覧が正常に取得されました。
@@ -126,6 +139,7 @@ paths:
                   $ref: "#/components/schemas/Project"
         "500":
           description: "サーバー側のエラーによりプロジェクトの一覧を取得できませんでした。"
+  /api/project:
     post:
       summary: 新規プロジェクトの作成
       operationId: createProject
@@ -153,6 +167,9 @@ paths:
                   type: string
                   format: date
                   description: "プロジェクトの期限日"
+                userId:
+                  type: string
+                  description: "ユーザーID"
       responses:
         201:
           description: "プロジェクトが正常に作成されました。"
@@ -364,6 +381,10 @@ components:
         _id:
           type: string
           description: プロジェクトのユニークなID
+        projectId:
+          type: string
+        userId:
+          type: string
         name:
           type: string
           description: プロジェクト名

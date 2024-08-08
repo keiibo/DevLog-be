@@ -1,6 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import User from "../model/User";
+import Project from "../model/Project";
+import mongoose from "mongoose";
 
 /**
  * ユーザーの新規作成
@@ -54,23 +56,28 @@ const loginUser = async (req: express.Request, res: express.Response) => {
     const user = await User.findOne(query);
 
     if (!user) {
-      return res.status(404).send("ユーザーが見つかりません。");
+      return res.status(404).send("ユーザーまたはパスワードが不明。");
     }
 
     // パスワードの確認
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
-      return res.status(401).send("パスワードが正しくありません。");
+      return res.status(401).send("ユーザーまたはパスワードが不明");
     }
 
-    // ログイン成功
+    // ログイン成功時
+    // userIdに紐づくプロジェクトを取得する
+    const projects = await Project.find({ userId: user._id });
+
     res.status(200).send({
       userId: user.userId,
       userName: user.userName,
       email: user.email,
+      projectIds: projects.map((project) => {
+        return project?.projectId;
+      }),
     });
   } catch (error) {
-    console.error(error);
     res.status(500).send("サーバーエラーです。");
   }
 };

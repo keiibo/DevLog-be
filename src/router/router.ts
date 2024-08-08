@@ -24,7 +24,7 @@ router.get("/project/:projectId", project.getProject);
 /**
  * GET:プロジェクト一覧取得
  */
-router.get("/project", project.getAllProject);
+router.get("/project/all/:userId", project.getAllProject);
 
 /**
  * POST: チケットの新規作成
