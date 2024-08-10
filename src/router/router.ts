@@ -3,13 +3,25 @@ import healthCheck from "../controller/healthCheck";
 import project from "../controller/project";
 import ticket from "../controller/ticket";
 import user from "../controller/user";
+import { authenticateToken } from "../middleWare/auth";
 
 const router = express.Router();
-
 /**
  * ヘルスチェック
  */
 router.get("/health-check", healthCheck.getHealthCheck);
+/**
+ * POST: ユーザー新規作成
+ */
+router.post("/user", user.createUser);
+
+/**
+ * POST: ユーザーログイン
+ */
+router.post("/login", user.loginUser);
+
+// ここから下のルートには認証が適用されます
+router.use(authenticateToken);
 
 /**
  * POST: プロジェクト新規作成
@@ -48,12 +60,8 @@ router.put("/tickets/:ticketId", ticket.updateTicket);
  */
 router.delete("/tickets/:ticketId", ticket.deleteTicket);
 /**
- * POST: ユーザー新規作成
+ * GET: Me
  */
-router.post("/user", user.createUser);
-/**
- * POST: ユーザーログイン
- */
-router.post("/login", user.loginUser);
+router.get("/me", user.getUser);
 
 export default router;

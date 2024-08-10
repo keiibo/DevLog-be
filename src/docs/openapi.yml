@@ -6,6 +6,9 @@ info:
 servers:
   - url: http://localhost:4001/
     description: Production server
+security:
+  - Bearer: []
+
 paths:
   # ユーザー
   /api/user:
@@ -46,6 +49,20 @@ paths:
                 $ref: "#/components/schemas/User"
         "500":
           description: Internal server error
+  /api/me:
+    get:
+      tags: ["User"]
+      summary: user情報取得
+      description: user情報を取得する
+      responses:
+        "200":
+          description: "ログインしているユーザー情報を取得する"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "500":
+          description: Internal server error
   /api/login:
     post:
       tags: ["Login"]
@@ -68,8 +85,8 @@ paths:
                   type: string
                   description: パスワード
               example:
-                identifier: user@example.com
-                password: passw0rd
+                identifier: keibo@example.com
+                password: Keita1209
       responses:
         "200":
           description: ログイン成功
@@ -545,3 +562,8 @@ components:
             - notStarted
             - underConstruction
             - completed
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

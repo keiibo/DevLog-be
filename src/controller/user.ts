@@ -2,7 +2,11 @@ import express from "express";
 import bcrypt from "bcrypt";
 import User from "../model/User";
 import Project from "../model/Project";
-import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+const JWT_S = process.env.JWT_SECRET;
 
 /**
  * ユーザーの新規作成
@@ -42,6 +46,39 @@ const createUser = async (req: express.Request, res: express.Response) => {
 };
 
 /**
+ * ユーザーの取得
+ */
+const getUser = async (req: express.Request, res: express.Response) => {
+  try {
+    console.log(res.locals.user);
+
+    const loginUser = await User.findOne({ userId: res.locals.user.userId });
+    if (!loginUser) {
+      return res.status(404).send("User not found");
+    }
+    // ログイン成功時
+    // userIdに紐づくプロジェクトを取得する
+    const projects = await Project.find({ userId: res.locals.user._id });
+
+    // ユーザー情報から必要なデータのみを抽出
+    const userData = {
+      userId: loginUser.userId,
+      userName: loginUser.userName,
+      email: loginUser.email,
+      projectIds: projects.map((project) => {
+        return project?.projectId;
+      }),
+    };
+
+    // 循環参照がない形でレスポンスを送信
+    res.status(200).json(userData);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+/**
  * ユーザーのログイン
  */
 const loginUser = async (req: express.Request, res: express.Response) => {
@@ -65,11 +102,19 @@ const loginUser = async (req: express.Request, res: express.Response) => {
       return res.status(401).send("ユーザーまたはパスワードが不明");
     }
 
+    // トークンの発行
+    const token = jwt.sign(
+      { _id: user._id, userId: user.userId, email: user.email },
+      JWT_S || "", // トークンを安全に保持するための秘密鍵
+      { expiresIn: "1h" } // トークンの有効期限
+    );
+
     // ログイン成功時
     // userIdに紐づくプロジェクトを取得する
     const projects = await Project.find({ userId: user._id });
 
     res.status(200).send({
+      token: token,
       userId: user.userId,
       userName: user.userName,
       email: user.email,
@@ -82,4 +127,4 @@ const loginUser = async (req: express.Request, res: express.Response) => {
   }
 };
 
-export default { createUser, loginUser };
+export default { createUser, loginUser, getUser };
