@@ -36,8 +36,6 @@ const createUser = async (req: express.Request, res: express.Response) => {
       userId: newUser.userId,
       userName: newUser.userName,
       email: newUser.email,
-      createdAt: newUser.createdAt,
-      updatedAt: newUser.updatedAt,
     });
   } catch (error) {
     console.error(error);
@@ -50,8 +48,6 @@ const createUser = async (req: express.Request, res: express.Response) => {
  */
 const getUser = async (req: express.Request, res: express.Response) => {
   try {
-    console.log(res.locals.user);
-
     const loginUser = await User.findOne({ userId: res.locals.user.userId });
     if (!loginUser) {
       return res.status(404).send("User not found");
@@ -106,7 +102,7 @@ const loginUser = async (req: express.Request, res: express.Response) => {
     const token = jwt.sign(
       { _id: user._id, userId: user.userId, email: user.email },
       JWT_S || "", // トークンを安全に保持するための秘密鍵
-      { expiresIn: "1h" } // トークンの有効期限
+      { expiresIn: "3h" } // トークンの有効期限
     );
 
     // ログイン成功時

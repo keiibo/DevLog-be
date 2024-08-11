@@ -11,58 +11,6 @@ security:
 
 paths:
   # ユーザー
-  /api/user:
-    post:
-      tags: ["User"]
-      summary: user新規作成
-      description: userアカウントを新規作成する
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - userId
-                - userName
-                - password
-                - email
-              properties:
-                userId:
-                  type: string
-                  description: ユーザーID
-                userName:
-                  type: string
-                  description: ユーザーネーム
-                password:
-                  type: string
-                  description: ハッシュ化前の生パスワード
-                email:
-                  type: string
-                  description: email
-      responses:
-        "200":
-          description: "ユーザー作成成功時"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "500":
-          description: Internal server error
-  /api/me:
-    get:
-      tags: ["User"]
-      summary: user情報取得
-      description: user情報を取得する
-      responses:
-        "200":
-          description: "ログインしているユーザー情報を取得する"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "500":
-          description: Internal server error
   /api/login:
     post:
       tags: ["Login"]
@@ -119,6 +67,58 @@ paths:
           description: User not found
         "500":
           description: Server error
+  /api/user:
+    post:
+      tags: ["User"]
+      summary: user新規作成
+      description: userアカウントを新規作成する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - userName
+                - password
+                - email
+              properties:
+                userId:
+                  type: string
+                  description: ユーザーID
+                userName:
+                  type: string
+                  description: ユーザーネーム
+                password:
+                  type: string
+                  description: ハッシュ化前の生パスワード
+                email:
+                  type: string
+                  description: email
+      responses:
+        "200":
+          description: "ユーザー作成成功時"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "500":
+          description: Internal server error
+  /api/me:
+    get:
+      tags: ["User"]
+      summary: user情報取得
+      description: user情報を取得する
+      responses:
+        "200":
+          description: "ログインしているユーザー情報を取得する"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "500":
+          description: Internal server error
 
   # Health Check
   /api/health-check:
