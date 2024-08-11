@@ -15,6 +15,17 @@ const createUser = async (req: express.Request, res: express.Response) => {
   try {
     const { userId, userName, email, password } = req.body;
 
+    // ユーザーIDが既に存在するかチェックする
+    const existingUserId = await User.findOne({ userId: userId });
+    if (existingUserId) {
+      return res.status(409).send("このユーザーIDは既に使用されています。");
+    }
+
+    // Emailが既に登録されているかチェックする
+    const existingEmail = await User.findOne({ email: email });
+    if (existingEmail) {
+      return res.status(409).send("このメールアドレスは既に登録されています。");
+    }
     // パスワードのハッシュ化
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
