@@ -4,14 +4,14 @@ info:
   description: DevLogで使用するAPI
   version: "1.0"
 servers:
-  - url: http://localhost:4001/
+  - url: http://localhost:4001/api
     description: Production server
 security:
   - Bearer: []
 
 paths:
   # ユーザー
-  /api/login:
+  /login:
     post:
       tags: ["Login"]
       summary: ログイン
@@ -67,7 +67,7 @@ paths:
           description: User not found
         "500":
           description: Server error
-  /api/user:
+  /user:
     post:
       tags: ["User"]
       summary: user新規作成
@@ -105,7 +105,7 @@ paths:
                 $ref: "#/components/schemas/User"
         "500":
           description: Internal server error
-  /api/me:
+  /me:
     get:
       tags: ["User"]
       summary: user情報取得
@@ -121,7 +121,7 @@ paths:
           description: Internal server error
 
   # Health Check
-  /api/health-check:
+  /health-check:
     get:
       tags: ["HealthCheck"]
       summary: ヘルスチェック
@@ -131,7 +131,7 @@ paths:
           description: 正常
 
   # Project一覧の取得
-  /api/project/all/{userId}:
+  /project/all/{userId}:
     get:
       summary: ユーザーに紐づく全プロジェクトの一覧を取得
       operationId: listProjects
@@ -156,7 +156,7 @@ paths:
                   $ref: "#/components/schemas/Project"
         "500":
           description: "サーバー側のエラーによりプロジェクトの一覧を取得できませんでした。"
-  /api/project:
+  /project:
     post:
       summary: 新規プロジェクトの作成
       operationId: createProject
@@ -202,7 +202,7 @@ paths:
         400:
           description: "無効なリクエストです。"
   # PJの詳細取得
-  /api/project/{projectId}:
+  /project/{projectId}:
     get:
       summary: 指定されたプロジェクトの詳細が返されます
       operationId: getProject
@@ -226,7 +226,7 @@ paths:
           description: Project not found
 
   #チケットの新規作成
-  /api/tickets:
+  /tickets:
     post:
       tags: ["Ticket"]
       summary: タスクチケットの新規作成
@@ -277,7 +277,7 @@ paths:
                   error:
                     type: string
                     description: "チケットが取得できませんでした"
-  /api/tickets/{ticketId}:
+  /tickets/{ticketId}:
     get:
       tags: ["Ticket"]
       summary: ticketIdからチケットの詳細を取得する
@@ -350,7 +350,63 @@ paths:
           description: チケットIdが無効です
         "500":
           description: Internal server error
-
+  /tickets/category/{projectId}:
+    get:
+      summary: カテゴリ一覧の取得
+      tags: ["Ticket"]
+      description: プロジェクトIdを元にカテゴリ一覧を取得
+      operationId: getCategories
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: projectId
+          schema:
+            type: string
+      responses:
+        "200":
+          description: カテゴリ一覧が正常に取得されました。
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TicketCategories"
+        '400':
+          description: プロジェクトIDが提供されていない場合のエラーレスポンス
+        '404':
+          description: 指定されたプロジェクトIDに関連するカテゴリが見つからない場合のエラーレスポンス
+        '500':
+          description: サーバー内部エラー
+    post:
+      summary: カテゴリの配列を受け取り、データベースに保存
+      tags: ["Ticket"]
+      description: 画面から設定される一意のカテゴリを配列形式で受け取り、データベースに保存します。
+      operationId: createCategories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+              $ref: "#/components/schemas/TicketCategories"
+      responses:
+        "201":
+          description: カテゴリが正常に作成されました。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "400":
+          description: 不正なリクエストデータ。
+        "500":
+          description: サーバーエラー。
 components:
   schemas:
     # ユーザー
@@ -469,7 +525,31 @@ components:
             - notStarted
             - underConstruction
             - completed
-
+    TicketCategories:
+      type: object
+      required:
+        - projectId
+        - categories
+      properties:
+        projectId:
+          type: string
+          description: プロジェクトの一意識別子。
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Category"
+    Category:
+      type: object
+      required:
+        - uuid
+        - name
+      properties:
+        uuid:
+          type: string
+          description: カテゴリの一意識別子。
+        name:
+          type: string
+          description: カテゴリ名。
     TicketCreateRequest:
       type: object
       required:

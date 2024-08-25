@@ -1,9 +1,10 @@
 import express from "express";
 import healthCheck from "../controller/healthCheck";
 import project from "../controller/project";
-import ticket from "../controller/ticket";
+import ticket from "../controller/ticket/ticket";
 import user from "../controller/user";
 import { authenticateToken } from "../middleWare/auth";
+import category from "../controller/ticket/category";
 
 const router = express.Router();
 /**
@@ -59,6 +60,14 @@ router.put("/tickets/:ticketId", ticket.updateTicket);
  * DELETE: チケットの更新
  */
 router.delete("/tickets/:ticketId", ticket.deleteTicket);
+/**
+ * POST: チケットカテゴリの作成
+ */
+router.post("/tickets/category", category.createCategories);
+/**
+ * GET: チケットカテゴリの一覧取得
+ */
+router.get("/tickets/category/:projectId", category.getCategories);
 /**
  * GET: Me
  */

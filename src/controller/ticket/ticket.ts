@@ -1,6 +1,7 @@
 import express from "express";
-import Ticket from "../model/Ticket";
-import { CounterType, getNextSequence } from "../db/count";
+import Ticket from "../../model/ticket/Ticket";
+import { getNextSequence } from "../../db/count";
+import Category from "../../model/ticket/Category";
 
 /**
  * チケットの新規作成
