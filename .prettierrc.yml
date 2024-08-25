@@ -1,0 +1,19 @@
+tabWidth: 2
+printWidth: 80
+singleQuote: true
+trailingComma: 'none'
+semi: true
+useTabs: false
+importOrder:
+  - '^react$'
+  - '^(?!(components/|constants/|lib/|routes/|store/|styles/|test/|types/|./|../)).*'
+  - 'components/(.*)$'
+  - 'constants/(.*)$'
+  - 'lib/(.*)$'
+  - 'routes/(.*)$'
+  - 'store/(.*)$'
+  - 'styles/(.*)$'
+  - 'test/(.*)$'
+  - 'types/(.*)$'
+  - './(.*)$'
+  - '../(.*)$'

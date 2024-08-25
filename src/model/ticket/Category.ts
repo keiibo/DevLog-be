@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 /**
  * Categoryモデルのスキーマ定義です。
@@ -10,11 +10,11 @@ const categorySchema = new mongoose.Schema(
   {
     uuid: { type: String, required: true, unique: true },
     name: { type: String, required: true, unique: true },
-    projectId: { type: String, required: true },
+    projectId: { type: String, required: true }
   },
-  { collection: "Categories" }
+  { collection: 'Categories' }
 );
 
-const Category = mongoose.model("Category", categorySchema);
+const Category = mongoose.model('Category', categorySchema);
 
 export default Category;

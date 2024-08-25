@@ -1,5 +1,5 @@
-import express from "express";
-import Category from "../../model/ticket/Category";
+import express from 'express';
+import Category from '../../model/ticket/Category';
 
 /**
  * チケットカテゴリの作成
@@ -11,7 +11,7 @@ const syncCategories = async (req: express.Request, res: express.Response) => {
     if (!projectId || !Array.isArray(categories)) {
       return res
         .status(400)
-        .send("プロジェクトIDとカテゴリ配列が正しく提供されていません");
+        .send('プロジェクトIDとカテゴリ配列が正しく提供されていません');
     }
 
     // リクエストからカテゴリUUIDのリストを作成
@@ -39,7 +39,7 @@ const syncCategories = async (req: express.Request, res: express.Response) => {
       await Category.insertMany(
         newCategories.map((category) => ({
           ...category,
-          projectId,
+          projectId
         }))
       );
     }
@@ -47,11 +47,10 @@ const syncCategories = async (req: express.Request, res: express.Response) => {
     res.status(200).send({
       success: true,
       message: `更新されたカテゴリ数: ${newCategories.length}, 削除されたカテゴリ数: ${categoriesToDelete.length}`,
-      projectId: projectId,
+      projectId: projectId
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).send({ success: false, message: "500" });
+    res.status(500).send({ success: false, message: '500' });
   }
 };
 
@@ -62,7 +61,7 @@ const getCategories = async (req: express.Request, res: express.Response) => {
   try {
     const { projectId } = req.params; // URLからprojectIdを取得
     if (!projectId) {
-      return res.status(400).send("プロジェクトIDが提供されていません");
+      return res.status(400).send('プロジェクトIDが提供されていません');
     }
 
     // projectIdに一致するカテゴリをデータベースから検索
@@ -73,19 +72,18 @@ const getCategories = async (req: express.Request, res: express.Response) => {
       projectId: projectId,
       categories: categories.map((category) => ({
         uuid: category.uuid,
-        name: category.name,
-      })),
+        name: category.name
+      }))
     };
 
     // 成功した場合、整形したデータを返す
     res.status(200).json(responseData);
   } catch (error: any) {
-    console.error(error);
     res.status(500).send({ success: false, message: error.message });
   }
 };
 
 export default {
   syncCategories,
-  getCategories,
+  getCategories
 };

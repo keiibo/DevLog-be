@@ -1,7 +1,7 @@
-import express from "express";
-import Ticket from "../../model/ticket/Ticket";
-import { getNextSequence } from "../../db/count";
-import Category from "../../model/ticket/Category";
+import express from 'express';
+import Ticket from '../../model/ticket/Ticket';
+import { getNextSequence } from '../../db/count';
+import Category from '../../model/ticket/Category';
 
 /**
  * チケットの新規作成
@@ -17,7 +17,7 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       limitStartYm,
       limitEndYm,
       priority,
-      status,
+      status
     } = req.body;
 
     const sequenceNumber = await getNextSequence(projectId);
@@ -34,12 +34,11 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       limitStartYm,
       limitEndYm,
       priority,
-      status,
+      status
     });
     await newTicket.save();
     res.status(201).send(newTicket);
   } catch (error: any) {
-    console.error(error);
     res.status(400).send(error.message);
   }
 };
@@ -58,11 +57,10 @@ const updateTicket = async (req: express.Request, res: express.Response) => {
       { new: true } // 更新後のドキュメントを返す
     );
     if (!updatedTicket) {
-      return res.status(404).send("指定されたチケットIDが見つかりません");
+      return res.status(404).send('指定されたチケットIDが見つかりません');
     }
     res.status(200).send(updatedTicket);
   } catch (error: any) {
-    console.error(error);
     res.status(500).send(error.message);
   }
 };
@@ -74,12 +72,11 @@ const getAllTickets = async (req: express.Request, res: express.Response) => {
   try {
     const { projectId } = req.query;
     if (!projectId) {
-      return res.status(400).send("プロジェクトIDが正しくありません");
+      return res.status(400).send('プロジェクトIDが正しくありません');
     }
     const tickets = await Ticket.find({ projectId: projectId });
     res.status(200).send(tickets);
   } catch (error: any) {
-    console.error(error);
     res.status(500).send(error.message);
   }
 };
@@ -91,12 +88,11 @@ const getTicket = async (req: express.Request, res: express.Response) => {
   try {
     const { ticketId } = req.params;
     if (!ticketId) {
-      return res.status(400).send("チケットIDが正しくありません");
+      return res.status(400).send('チケットIDが正しくありません');
     }
     const ticket = await Ticket.findOne({ ticketId: ticketId });
     res.status(200).send(ticket);
   } catch (error: any) {
-    console.error(error);
     res.status(500).send(error.message);
   }
 };
@@ -108,12 +104,11 @@ const deleteTicket = async (req: express.Request, res: express.Response) => {
   try {
     const { ticketId } = req.params;
     if (!ticketId) {
-      return res.status(400).send("チケットIDが正しくありません");
+      return res.status(400).send('チケットIDが正しくありません');
     }
     const ticket = await Ticket.findOneAndDelete({ ticketId: ticketId });
     res.status(200).send(ticket);
   } catch (error: any) {
-    console.error(error);
     res.status(500).send(error.message);
   }
 };
@@ -123,5 +118,5 @@ export default {
   getAllTickets,
   getTicket,
   updateTicket,
-  deleteTicket,
+  deleteTicket
 };

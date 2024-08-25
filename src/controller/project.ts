@@ -1,6 +1,6 @@
-import express from "express";
-import Project from "../model/Project";
-import User from "../model/User";
+import express from 'express';
+import Project from '../model/Project';
+import User from '../model/User';
 
 /**
  * プロジェクトの新規作成
@@ -17,12 +17,11 @@ const postProject = async (
       detail,
       limitDate,
       projectId,
-      userId: user?._id,
+      userId: user?._id
     });
     await newProject.save();
     res.status(201).send(newProject);
   } catch (error: any) {
-    console.log(error);
     res.status(400).send(error.message);
   }
 };
@@ -40,7 +39,7 @@ const getAllProject = async (
 
   try {
     const projects = await Project.find({
-      userId: user?._id,
+      userId: user?._id
     });
     res.status(200).json(projects);
   } catch (error: any) {
@@ -59,18 +58,17 @@ const getProject = async (
     const { projectId } = req.params;
     const project = await Project.findById(projectId);
     if (!project) {
-      res.status(404).json({ message: "Project not found" });
+      res.status(404).json({ message: 'Project not found' });
       return;
     }
     res.status(200).json(project);
   } catch (error) {
-    console.error("Error fetching project:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
 export default {
   postProject,
   getProject,
-  getAllProject,
+  getAllProject
 };
