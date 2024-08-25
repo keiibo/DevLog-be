@@ -4,60 +4,59 @@ import Category from "../../model/ticket/Category";
 /**
  * チケットカテゴリの作成
  */
-const createCategories = async (
-  req: express.Request,
-  res: express.Response
-) => {
+const syncCategories = async (req: express.Request, res: express.Response) => {
   try {
     const { projectId, categories } = req.body;
-    console.log(projectId, categories);
 
-    if (!projectId || !Array.isArray(categories) || categories.length === 0) {
+    if (!projectId || !Array.isArray(categories)) {
       return res
         .status(400)
         .send("プロジェクトIDとカテゴリ配列が正しく提供されていません");
     }
 
-    // すべてのカテゴリのUUIDを取得
-    const uuids = categories.map((category) => category.uuid);
+    // リクエストからカテゴリUUIDのリストを作成
+    const requestedUuids = new Set(categories.map((category) => category.uuid));
 
-    // 既存のカテゴリを検索
-    const existingCategories = await Category.find({ uuid: { $in: uuids } });
-    const existingUuids = new Set(
-      existingCategories.map((category) => category.uuid)
+    // データベースから現在のプロジェクトの全カテゴリを取得
+    const currentCategories = await Category.find({ projectId });
+
+    // リクエストに含まれないカテゴリをフィルタリング
+    const categoriesToDelete = currentCategories.filter(
+      (category) => !requestedUuids.has(category.uuid)
     );
 
-    // 既存のUUIDを除外した新規カテゴリのみをフィルタリング
-    const newCategories = categories
-      .filter((category) => !existingUuids.has(category.uuid))
-      .map((category) => ({
-        ...category,
-        projectId, // projectId を各カテゴリに追加
-      }));
-
-    // 新規カテゴリがない場合は早期リターン
-    if (newCategories.length === 0) {
-      return res.status(204).send("新規登録するカテゴリはありません");
+    // 余分なカテゴリを削除
+    if (categoriesToDelete.length > 0) {
+      const deleteUuids = categoriesToDelete.map((category) => category.uuid);
+      await Category.deleteMany({ uuid: { $in: deleteUuids } });
     }
 
-    // 新規カテゴリをデータベースに保存
-    await Category.insertMany(newCategories);
-    res.status(201).send({
+    // 新規カテゴリをフィルタリングしてデータベースに追加
+    const newCategories = categories.filter(
+      (category) => !currentCategories.some((c) => c.uuid === category.uuid)
+    );
+    if (newCategories.length > 0) {
+      await Category.insertMany(
+        newCategories.map((category) => ({
+          ...category,
+          projectId,
+        }))
+      );
+    }
+
+    res.status(200).send({
       success: true,
-      message: `${newCategories.length}件のカテゴリを登録しました`,
+      message: `更新されたカテゴリ数: ${newCategories.length}, 削除されたカテゴリ数: ${categoriesToDelete.length}`,
       projectId: projectId,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
-    res.status(500).send({ success: false, message: error.message });
+    res.status(500).send({ success: false, message: "500" });
   }
 };
 
 /**
  * カテゴリ一覧の取得
- */
-/**
- * 特定のプロジェクトIDに関連する全カテゴリを取得し、整形して返す
  */
 const getCategories = async (req: express.Request, res: express.Response) => {
   try {
@@ -87,6 +86,6 @@ const getCategories = async (req: express.Request, res: express.Response) => {
 };
 
 export default {
-  createCategories,
+  syncCategories,
   getCategories,
 };

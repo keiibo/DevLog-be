@@ -63,7 +63,7 @@ router.delete("/tickets/:ticketId", ticket.deleteTicket);
 /**
  * POST: チケットカテゴリの作成
  */
-router.post("/tickets/category", category.createCategories);
+router.post("/tickets/category", category.syncCategories);
 /**
  * GET: チケットカテゴリの一覧取得
  */
