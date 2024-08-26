@@ -20,6 +20,7 @@ const corsOptions = {
   origin: 'http://localhost:5173', // このオリジンからのアクセスを許可
   optionsSuccessStatus: 200 // レガシーブラウザ対応のためのステータスコード
 };
+
 app.use(cors(corsOptions));
 
 // DB接続
