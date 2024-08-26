@@ -1,7 +1,6 @@
 import express from 'express';
 import Ticket from '../../model/ticket/Ticket';
 import { getNextSequence } from '../../db/count';
-import Category from '../../model/ticket/Category';
 
 /**
  * チケットの新規作成
@@ -17,7 +16,8 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       limitStartYm,
       limitEndYm,
       priority,
-      status
+      status,
+      categories
     } = req.body;
 
     const sequenceNumber = await getNextSequence(projectId);
@@ -34,7 +34,8 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       limitStartYm,
       limitEndYm,
       priority,
-      status
+      status,
+      categories
     });
     await newTicket.save();
     res.status(201).send(newTicket);

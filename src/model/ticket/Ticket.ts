@@ -52,6 +52,12 @@ const ticketSchema = new mongoose.Schema(
     limitEndYm: { type: String },
     priority: { type: String, required: true, enum: Object.values(Priorities) },
     status: { type: String, required: true, enum: Object.values(Statuses) },
+    categories: [
+      {
+        uuid: { type: String, required: true },
+        name: { type: String, required: true }
+      }
+    ]
   },
   { collection: "Tickets" }
 );
