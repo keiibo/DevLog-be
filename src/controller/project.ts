@@ -56,13 +56,15 @@ const getProject = async (
 ): Promise<void> => {
   try {
     const { projectId } = req.params;
-    const project = await Project.findById(projectId);
+    const project = await Project.findOne({projectId:projectId});
     if (!project) {
       res.status(404).json({ message: 'Project not found' });
       return;
     }
     res.status(200).json(project);
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({ message: 'Internal server error' });
   }
 };
