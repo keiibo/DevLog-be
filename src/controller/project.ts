@@ -2,6 +2,9 @@ import express from 'express';
 import Project from '../model/Project';
 import User from '../model/User';
 import LinkIcon from '../model/detail/LinkIcons';
+import { v4 as uuidv4 } from 'uuid';
+import Category from '../model/ticket/Category';
+import mongoose from 'mongoose';
 
 /**
  * プロジェクトの新規作成
@@ -21,6 +24,26 @@ const postProject = async (
       userId: user?._id
     });
     await newProject.save();
+
+    // カテゴリの初期登録
+    // デフォルトカテゴリの配列
+    const defaultCategories = [
+      '要件定義',
+      'デザイン',
+      '設計',
+      '実装',
+      'テスト'
+    ];
+
+    // 各カテゴリを登録
+    for (const categoryName of defaultCategories) {
+      const newCategory = new Category({
+        uuid: uuidv4(),
+        name: categoryName,
+        projectId: projectId
+      });
+      await newCategory.save();
+    }
     res.status(201).send(newProject);
   } catch (error: any) {
     res.status(400).send(error.message);
