@@ -1,6 +1,7 @@
 import express from 'express';
 import Project from '../model/Project';
 import User from '../model/User';
+import LinkIcon from '../model/detail/LinkIcons';
 
 /**
  * プロジェクトの新規作成
@@ -56,15 +57,27 @@ const getProject = async (
 ): Promise<void> => {
   try {
     const { projectId } = req.params;
-    const project = await Project.findOne({projectId:projectId});
+    const project = await Project.findOne({ projectId: projectId });
+    const linkIconData = await LinkIcon.findOne({ projectId: projectId });
     if (!project) {
       res.status(404).json({ message: 'Project not found' });
       return;
     }
-    res.status(200).json(project);
+
+    // レスポンスオブジェクトの構築
+    const response = {
+      _id: project._id.toString(),
+      projectId: project.projectId,
+      name: project.name,
+      detail: project.detail,
+      limitDate: project.limitDate.toISOString(), // 日付をISO文字列に変換
+      linkIconList: linkIconData ? linkIconData.linkIconList : []
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     console.log(error);
-    
+
     res.status(500).json({ message: 'Internal server error' });
   }
 };

@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: DevLog API
   description: DevLogで使用するAPI
-  version: "1.0"
+  version: '1.0'
 servers:
   - url: http://localhost:4001/api
     description: Production server
@@ -13,7 +13,7 @@ paths:
   # ユーザー
   /login:
     post:
-      tags: ["Login"]
+      tags: ['Login']
       summary: ログイン
       description: Emailかパスワードでログイン
       requestBody:
@@ -36,7 +36,7 @@ paths:
                 identifier: keibo@example.com
                 password: Keita1209
       responses:
-        "200":
+        '200':
           description: ログイン成功
           content:
             application/json:
@@ -57,19 +57,19 @@ paths:
                     items:
                       type: string
                 example:
-                  userId: "12345"
-                  userName: "John Doe"
-                  email: "user@example.com"
-                  projectIds: ["DVLG", "DVLG2"]
-        "401":
+                  userId: '12345'
+                  userName: 'John Doe'
+                  email: 'user@example.com'
+                  projectIds: ['DVLG', 'DVLG2']
+        '401':
           description: Unauthorized - Incorrect password or identifier
-        "404":
+        '404':
           description: User not found
-        "500":
+        '500':
           description: Server error
   /user:
     post:
-      tags: ["User"]
+      tags: ['User']
       summary: user新規作成
       description: userアカウントを新規作成する
       requestBody:
@@ -97,33 +97,33 @@ paths:
                   type: string
                   description: email
       responses:
-        "200":
-          description: "ユーザー作成成功時"
+        '200':
+          description: 'ユーザー作成成功時'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "500":
+                $ref: '#/components/schemas/User'
+        '500':
           description: Internal server error
   /me:
     get:
-      tags: ["User"]
+      tags: ['User']
       summary: user情報取得
       description: user情報を取得する
       responses:
-        "200":
-          description: "ログインしているユーザー情報を取得する"
+        '200':
+          description: 'ログインしているユーザー情報を取得する'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "500":
+                $ref: '#/components/schemas/User'
+        '500':
           description: Internal server error
 
   # Health Check
   /health-check:
     get:
-      tags: ["HealthCheck"]
+      tags: ['HealthCheck']
       summary: ヘルスチェック
       description: 正常に動作しているかを確認する.
       responses:
@@ -146,16 +146,16 @@ paths:
             type: string
 
       responses:
-        "200":
+        '200':
           description: プロジェクトの一覧が正常に取得されました。
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Project"
-        "500":
-          description: "サーバー側のエラーによりプロジェクトの一覧を取得できませんでした。"
+                  $ref: '#/components/schemas/Project'
+        '500':
+          description: 'サーバー側のエラーによりプロジェクトの一覧を取得できませんでした。'
   /project:
     post:
       summary: 新規プロジェクトの作成
@@ -163,7 +163,7 @@ paths:
       tags:
         - Project
       requestBody:
-        description: "新規作成するプロジェクトのデータ"
+        description: '新規作成するプロジェクトのデータ'
         required: true
         content:
           application/json:
@@ -178,29 +178,29 @@ paths:
               properties:
                 name:
                   type: string
-                  description: "プロジェクト名"
+                  description: 'プロジェクト名'
                 detail:
                   type: string
-                  description: "プロジェクトの詳細"
+                  description: 'プロジェクトの詳細'
                 limitDate:
                   type: string
                   format: date
-                  description: "プロジェクトの期限日"
+                  description: 'プロジェクトの期限日'
                 projectId:
                   type: string
-                  description: "プロジェクトのID"
+                  description: 'プロジェクトのID'
                 userId:
                   type: string
-                  description: "ユーザーID"
+                  description: 'ユーザーID'
       responses:
         201:
-          description: "プロジェクトが正常に作成されました。"
+          description: 'プロジェクトが正常に作成されました。'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Project"
+                $ref: '#/components/schemas/Project'
         400:
-          description: "無効なリクエストです。"
+          description: '無効なリクエストです。'
   # PJの詳細取得
   /project/{projectId}:
     get:
@@ -216,19 +216,74 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: プロジェクトが返される
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Project"
-        "404":
+                $ref: '#/components/schemas/Project'
+        '404':
           description: Project not found
+
+  # 詳細のリンクアイコンの作成
+  /detail/linkIcon/{projectId}:
+    post:
+      tags:
+        - Detail
+      summary: Create a new link icon entry
+      description: Adds a new link icon entry to the database.
+      operationId: createLinkIcon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                  description: The project ID to which these link icons belong.
+                  example: 'DVLG'
+                linkIconList:
+                  type: array
+                  description: List of link icons.
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the link icon.
+                        example: 'GitHub'
+                      url:
+                        type: string
+                        description: URL linked to the icon.
+                        example: 'https://github.com'
+                      iconType:
+                        type: string
+                        description: Type of the icon.
+                        example: 'github'
+      responses:
+        '201':
+          description: Successfully created a new link icon entry.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Link icon entry created successfully.'
+                  data:
+                    $ref: '#/components/schemas/LinkIcon'
+        '400':
+          description: Invalid input data.
+        '500':
+          description: Internal server error.
 
   #チケットの新規作成
   /tickets:
     post:
-      tags: ["Ticket"]
+      tags: ['Ticket']
       summary: タスクチケットの新規作成
       description: チケットを新規作成する
       requestBody:
@@ -238,17 +293,17 @@ paths:
             schema:
               type: object
               properties:
-              $ref: "#/components/schemas/TicketCreateRequest"
+              $ref: '#/components/schemas/TicketCreateRequest'
       responses:
-        "200":
-          description: "チケット作成成功時"
+        '200':
+          description: 'チケット作成成功時'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Ticket"
+                $ref: '#/components/schemas/Ticket'
     # チケット全件取得
     get:
-      tags: ["Ticket"]
+      tags: ['Ticket']
       summary: チケット一覧の取得
       description: projectIdに紐づくチケットを取得
       parameters:
@@ -259,15 +314,15 @@ paths:
             type: string
           description: The project ID to retrieve tickets for.
       responses:
-        "200":
+        '200':
           description: Successfully retrieved the tickets
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Ticket"
-        "404":
+                  $ref: '#/components/schemas/Ticket'
+        '404':
           description: No tickets found for the specified project ID
           content:
             application/json:
@@ -276,10 +331,10 @@ paths:
                 properties:
                   error:
                     type: string
-                    description: "チケットが取得できませんでした"
+                    description: 'チケットが取得できませんでした'
   /tickets/{ticketId}:
     get:
-      tags: ["Ticket"]
+      tags: ['Ticket']
       summary: ticketIdからチケットの詳細を取得する
       description: ticketIdからチケットの詳細を取得する
       parameters:
@@ -290,18 +345,18 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 成功
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Ticket"
-        "400":
+                $ref: '#/components/schemas/Ticket'
+        '400':
           description: チケットIdが無効です
-        "500":
+        '500':
           description: Internal server error
     put:
-      tags: ["Ticket"]
+      tags: ['Ticket']
       summary: チケットの更新
       description: ticketIdからチケットを更新する
       parameters:
@@ -316,20 +371,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TicketUpdateRequest"
+              $ref: '#/components/schemas/TicketUpdateRequest'
       responses:
-        "200":
+        '200':
           description: 成功
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Ticket"
-        "400":
+                $ref: '#/components/schemas/Ticket'
+        '400':
           description: チケットIdが無効です
-        "500":
+        '500':
           description: Internal server error
     delete:
-      tags: ["Ticket"]
+      tags: ['Ticket']
       summary: チケットの削除
       description: ticketIdからチケットを削除する
       parameters:
@@ -340,20 +395,20 @@ paths:
             type: string
           description: チケットId
       responses:
-        "200":
+        '200':
           description: 成功
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Ticket"
-        "400":
+                $ref: '#/components/schemas/Ticket'
+        '400':
           description: チケットIdが無効です
-        "500":
+        '500':
           description: Internal server error
   /tickets/category/{projectId}:
     get:
       summary: カテゴリ一覧の取得
-      tags: ["Ticket"]
+      tags: ['Ticket']
       description: プロジェクトIdを元にカテゴリ一覧を取得
       operationId: getCategories
       parameters:
@@ -364,14 +419,14 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: カテゴリ一覧が正常に取得されました。
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/TicketCategories"
+                  $ref: '#/components/schemas/TicketCategories'
         '400':
           description: プロジェクトIDが提供されていない場合のエラーレスポンス
         '404':
@@ -380,7 +435,7 @@ paths:
           description: サーバー内部エラー
     post:
       summary: カテゴリの配列を受け取り、データベースに保存
-      tags: ["Ticket"]
+      tags: ['Ticket']
       description: 画面から設定される一意のカテゴリを配列形式で受け取り、データベースに保存します。
       operationId: createCategories
       requestBody:
@@ -390,9 +445,9 @@ paths:
             schema:
               type: object
               properties:
-              $ref: "#/components/schemas/TicketCategories"
+              $ref: '#/components/schemas/TicketCategories'
       responses:
-        "201":
+        '201':
           description: カテゴリが正常に作成されました。
           content:
             application/json:
@@ -403,9 +458,9 @@ paths:
                     type: boolean
                   message:
                     type: string
-        "400":
+        '400':
           description: 不正なリクエストデータ。
-        "500":
+        '500':
           description: サーバーエラー。
 components:
   schemas:
@@ -537,7 +592,7 @@ components:
         categories:
           type: array
           items:
-            $ref: "#/components/schemas/Category"
+            $ref: '#/components/schemas/Category'
     Category:
       type: object
       required:
@@ -642,6 +697,23 @@ components:
             - notStarted
             - underConstruction
             - completed
+    LinkIcon:
+      type: object
+      properties:
+        projectId:
+          type: string
+          description: The project ID to which these link icons belong.
+        linkIconList:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              url:
+                type: string
+              iconType:
+                type: string
   securitySchemes:
     Bearer:
       type: http
