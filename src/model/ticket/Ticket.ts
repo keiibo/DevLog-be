@@ -1,25 +1,25 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 // Enum 定義
 const LabelColorTypes = {
-  WHITE: "white",
-  LIGHT_BLUE: "lightBlue",
-  BLUE: "blue",
-  RED: "red",
-  GREEN: "green",
-  PURPLE: "purple",
+  WHITE: 'white',
+  LIGHT_BLUE: 'lightBlue',
+  BLUE: 'blue',
+  RED: 'red',
+  GREEN: 'green',
+  PURPLE: 'purple'
 };
 
 const Priorities = {
-  HIGH: "high",
-  MEDIUM: "medium",
-  LOW: "low",
+  HIGH: 'high',
+  MEDIUM: 'medium',
+  LOW: 'low'
 };
 
 const Statuses = {
-  NOT_STARTED: "notStarted",
-  UNDER_CONSTRUCTION: "underConstruction",
-  COMPLETED: "completed",
+  NOT_STARTED: 'notStarted',
+  UNDER_CONSTRUCTION: 'underConstruction',
+  COMPLETED: 'completed'
 };
 
 /**
@@ -43,7 +43,7 @@ const ticketSchema = new mongoose.Schema(
     labelColorType: {
       type: String,
       required: true,
-      enum: Object.values(LabelColorTypes),
+      enum: Object.values(LabelColorTypes)
     },
     title: { type: String, required: true },
     detail: { type: String },
@@ -57,11 +57,13 @@ const ticketSchema = new mongoose.Schema(
         uuid: { type: String, required: true },
         name: { type: String, required: true }
       }
-    ]
+    ],
+    createdAt: { type: String },
+    completedAt: { type: String }
   },
-  { collection: "Tickets" }
+  { collection: 'Tickets' }
 );
 
-const Ticket = mongoose.model("Ticket", ticketSchema);
+const Ticket = mongoose.model('Ticket', ticketSchema);
 
 export default Ticket;

@@ -17,7 +17,9 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       limitEndYm,
       priority,
       status,
-      categories
+      categories,
+      createdAt,
+      completedAt
     } = req.body;
 
     const sequenceNumber = await getNextSequence(projectId);
@@ -35,7 +37,9 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       limitEndYm,
       priority,
       status,
-      categories
+      categories,
+      createdAt,
+      completedAt
     });
     await newTicket.save();
     res.status(201).send(newTicket);
