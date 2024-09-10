@@ -8,16 +8,22 @@ import cors from 'cors';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
 const app = express();
 if (!process.env.DB_URI) {
   process.exit(1);
 }
 app.use(express.json());
 
+const fe_URL = process.env.FE_URL;
+const fe_URL_vercel = process.env.FE_URL_VERCEL;
+if (!fe_URL || !fe_URL_vercel) {
+  console.error('FEが見つからない');
+  process.exit(1); // 環境変数がない場合、アプリケーションを安全に終了
+}
+
 // CORS設定: 特定のオリジンからのリクエストのみ許可
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://dev-log-fe.vercel.app'], // このオリジンからのアクセスを許可
+  origin: [fe_URL, fe_URL_vercel], // このオリジンからのアクセスを許可
   optionsSuccessStatus: 200 // レガシーブラウザ対応のためのステータスコード
 };
 
@@ -33,7 +39,7 @@ app.get('/', (req, res) => {
   res.send('Connection Success');
 });
 app.use('/api', router);
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on PORT:${PORT}`);
 });
