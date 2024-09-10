@@ -17,7 +17,7 @@ app.use(express.json());
 
 // CORS設定: 特定のオリジンからのリクエストのみ許可
 const corsOptions = {
-  origin: 'http://localhost:5173', // このオリジンからのアクセスを許可
+  origin: ['http://localhost:5173', 'https://dev-log-fe.vercel.app'], // このオリジンからのアクセスを許可
   optionsSuccessStatus: 200 // レガシーブラウザ対応のためのステータスコード
 };
 
