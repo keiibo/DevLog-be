@@ -1,9 +1,9 @@
 import express from 'express';
-import Project from '../model/Project';
-import User from '../model/User';
-import LinkIcon from '../model/detail/LinkIcons';
+import Project from '../../model/Project';
+import User from '../../model/User';
+import LinkIcon from '../../model/detail/LinkIcons';
 import { v4 as uuidv4 } from 'uuid';
-import Category from '../model/ticket/Category';
+import Category from '../../model/ticket/Category';
 import mongoose from 'mongoose';
 
 /**
@@ -105,8 +105,41 @@ const getProject = async (
   }
 };
 
+/**
+ * プロジェクトの部分更新 (PATCH)
+ */
+const updateProjectPartial = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
+  try {
+    const { projectId } = req.params;
+    const { name, detail } = req.body;
+
+    // プロジェクトを取得
+    const project = await Project.findOne({ projectId: projectId });
+    if (!project) {
+      res.status(404).json({ message: 'Project not found' });
+      return;
+    }
+
+    // フィールドの部分更新
+    if (name !== undefined) project.name = name;
+    if (detail !== undefined) project.detail = detail;
+
+    // プロジェクトの保存
+    await project.save();
+
+    res.status(200).json(project);
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 export default {
   postProject,
   getProject,
-  getAllProject
+  getAllProject,
+  updateProjectPartial
 };

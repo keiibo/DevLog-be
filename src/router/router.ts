@@ -1,8 +1,8 @@
 import express from 'express';
 import healthCheck from '../controller/healthCheck';
-import project from '../controller/project';
+import project from '../controller/project/project';
 import ticket from '../controller/ticket/ticket';
-import detail from '../controller/detail/detail';
+import detail from '../controller/project/linkIcon';
 import user from '../controller/user';
 import { authenticateToken } from '../middleWare/auth';
 import category from '../controller/ticket/category';
@@ -39,6 +39,10 @@ router.get('/project/:projectId', project.getProject);
  * GET:プロジェクト一覧取得
  */
 router.get('/project/all/:userId', project.getAllProject);
+/**
+ * PATCH:プロジェクト更新
+ */
+router.patch('/project/:projectId', project.updateProjectPartial);
 
 /**
  * POST: チケットの新規作成

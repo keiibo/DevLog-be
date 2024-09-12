@@ -224,14 +224,48 @@ paths:
                 $ref: '#/components/schemas/Project'
         '404':
           description: Project not found
-
+    patch:
+      summary: プロジェクトの更新
+      description: プロジェクトの更新
+      tags:
+        - Project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                detail:
+                  type: string
+      responses:
+        '200':
+          description: Successfully updated the project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+        '403':
+          description: Unauthorized to update the project
+        '500':
+          description: Internal server error
   # 詳細のリンクアイコンの作成
   /detail/linkIcon/{projectId}:
     post:
       tags:
-        - Detail
-      summary: Create a new link icon entry
-      description: Adds a new link icon entry to the database.
+        - LinkIcon
+      summary: リンクアイコンの作成
+      description: リンクアイコンを新規作成し保存する
       operationId: createLinkIcon
       requestBody:
         required: true
