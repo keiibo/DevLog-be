@@ -80,7 +80,7 @@ router.post('/detail/linkIcon', detail.createOrUpdateLinkIconList);
 /**
  * DELETE: 特定のリンクアイコンの削除
  */
-router.delete('/detail/linkIcon', detail.deleteLinkIcon);
+router.delete('/detail/linkIcon/:projectId/:uuid', detail.deleteLinkIcon);
 /**
  * GET: Me
  */

@@ -34,7 +34,7 @@ const deleteLinkIcon = async (
   res: express.Response
 ): Promise<void> => {
   try {
-    const { projectId, uuid } = req.body;
+    const { projectId, uuid } = req.params;
 
     await LinkIcon.updateOne(
       { projectId },

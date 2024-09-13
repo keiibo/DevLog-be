@@ -260,29 +260,26 @@ paths:
         '500':
           description: Internal server error
   # 詳細のリンクアイコンの作成
-  /detail/linkIcon:
+  /detail/linkIcon/{projectId}/{uuid}:
     delete:
       tags:
         - LinkIcon
       operationId: deleteLinkIcon
       summary: 特定のリンクアイコンを削除する
       description: プロジェクトのリンクアイコンリストから指定されたリンクアイコンを削除します。
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - projectId
-                - uuid
-              properties:
-                projectId:
-                  type: string
-                  description: プロジェクトのID
-                uuid:
-                  type: string
-                  description: 削除するリンクアイコンのUUID
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: string
+          required: true
+          description: プロジェクトのID
+        - in: path
+          name: uuid
+          schema:
+            type: string
+          required: true
+          description: 削除するリンクアイコンのUUID
       responses:
         '200':
           description: リンクアイコンを正常に削除しました。
