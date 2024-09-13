@@ -36,34 +36,10 @@ const deleteLinkIcon = async (
   try {
     const { projectId, uuid } = req.body;
 
-    // 指定された projectId のエントリを取得
-    // const linkIconEntry = await LinkIcon.findOne({ projectId: projectId });
-    // 指定された uuid のリンクアイコンを削除
-    const result = await LinkIcon.updateOne(
+    await LinkIcon.updateOne(
       { projectId },
       { $pull: { linkIconList: { uuid } } }
     );
-    // if (!linkIconEntry) {
-    //   res.status(404).send({
-    //     message: '指定された projectId のリンクアイコンが見つかりません。'
-    //   });
-    //   return;
-    // }
-    // linkIconList から指定された uuid を持つアイコンを削除
-    // const removedIcon = linkIconEntry.linkIconList.find(
-    //   (icon) => icon.uuid === uuid
-    // );
-    // if (!removedIcon) {
-    //   res.status(404).send({
-    //     message: '指定された uuid のリンクアイコンが見つかりません。'
-    //   });
-    //   return;
-    // }
-
-    // removedIcon.remove();
-
-    // // 更新を保存
-    // await linkIconEntry.save();
 
     res.status(200).send({
       message: 'リンクアイコンを正常に削除しました。'
