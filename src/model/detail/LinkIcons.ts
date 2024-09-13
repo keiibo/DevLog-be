@@ -5,7 +5,8 @@ const linkIconSchema = new Schema(
   {
     name: { type: String, required: true },
     url: { type: String, required: true },
-    iconType: { type: String, required: true }
+    iconType: { type: String, required: true },
+    uuid: { type: String, required: true }
   },
   {
     _id: false // サブドキュメントには独自の_idを生成しない
