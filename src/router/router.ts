@@ -78,6 +78,10 @@ router.get('/tickets/category/:projectId', category.getCategories);
  */
 router.post('/detail/linkIcon', detail.createOrUpdateLinkIconList);
 /**
+ * DELETE: 特定のリンクアイコンの削除
+ */
+router.delete('/detail/linkIcon', detail.deleteLinkIcon);
+/**
  * GET: Me
  */
 router.get('/me', user.getUser);
