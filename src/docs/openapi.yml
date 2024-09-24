@@ -548,6 +548,126 @@ paths:
           description: 不正なリクエストデータ。
         '500':
           description: サーバーエラー。
+
+  /note/{projectId}:
+    get:
+      tags: ['Note']
+      summary: プロジェクト内のすべてのノートを取得
+      description: 指定されたプロジェクトIDに紐づくすべてのノートを取得します。
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+          description: ノートが属するプロジェクトのID。
+      responses:
+        '200':
+          description: 正常にノートが取得されました。
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note'
+        '404':
+          description: 指定されたプロジェクトIDにノートが存在しません。
+        '500':
+          description: サーバーエラーが発生しました。
+  /note/create/{projectId}:
+    post:
+      tags: ['Note']
+      summary: 新規ノートの作成
+      description: 指定されたプロジェクトに対して新しいノートを作成します。
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+          description: ノートが属するプロジェクトのID。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                  description: ノート作成者のユニーク識別子。
+                  example: '123e4567-e89b-12d3-a456-426614174000'
+                icon:
+                  type: string
+                  description: ノートに関連するアイコン。
+                  example: 'note'
+                title:
+                  type: string
+                  description: ノートのタイトル。
+                  example: '私の最初のノート'
+                body:
+                  type: string
+                  description: ノートの本文。
+                  example: 'これはノートの本文です。'
+      responses:
+        '201':
+          description: ノートが正常に作成されました。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
+          description: 入力が無効です。
+        '500':
+          description: サーバーエラーが発生しました。
+
+  /note/update/{projectId}:
+    put:
+      tags: ['Note']
+      summary: 既存のノートの更新
+      description: 指定されたプロジェクトのノートを更新します。
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+          description: ノートが属するプロジェクトのID。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                  description: ノート作成者のユニーク識別子。
+                  example: '123e4567-e89b-12d3-a456-426614174000'
+                icon:
+                  type: string
+                  description: ノートに関連するアイコン。
+                  example: 'note'
+                title:
+                  type: string
+                  description: ノートのタイトル。
+                  example: '更新されたノートのタイトル'
+                body:
+                  type: string
+                  description: ノートの更新された本文。
+                  example: 'これは更新されたノートの本文です。'
+      responses:
+        '200':
+          description: ノートが正常に更新されました。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '404':
+          description: 指定されたノートが見つかりません。
+        '500':
+          description: サーバーエラーが発生しました。
+
 components:
   schemas:
     # ユーザー
@@ -800,6 +920,34 @@ components:
                 type: string
               iconType:
                 type: string
+
+    Note:
+      type: object
+      properties:
+        projectId:
+          type: string
+          description: ノートが属するプロジェクトのID。
+        uuid:
+          type: string
+          description: ノート作成者のユニーク識別子。
+        icon:
+          type: string
+          description: ノートに関連するアイコン。
+        title:
+          type: string
+          description: ノートのタイトル。
+        createdAt:
+          type: string
+          format: date-time
+          description: ノートが作成された日時。
+        updatedAt:
+          type: string
+          format: date-time
+          description: ノートが最後に更新された日時。
+        body:
+          type: string
+          description: ノートの本文。
+
   securitySchemes:
     Bearer:
       type: http

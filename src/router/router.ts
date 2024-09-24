@@ -6,6 +6,7 @@ import detail from '../controller/project/linkIcon';
 import user from '../controller/user';
 import { authenticateToken } from '../middleWare/auth';
 import category from '../controller/ticket/category';
+import note from '../controller/note/note';
 
 const router = express.Router();
 /**
@@ -81,6 +82,19 @@ router.post('/detail/linkIcon', detail.createOrUpdateLinkIconList);
  * DELETE: 特定のリンクアイコンの削除
  */
 router.delete('/detail/linkIcon/:projectId/:uuid', detail.deleteLinkIcon);
+/**
+ * GET:ノートの全取得
+ *
+ */
+router.get('/note/:projectId', note.getNotes);
+/**
+ * POST: ノートの新規作成
+ */
+router.post('/note/create/:projectId', note.postNote);
+/**
+ * PUT: ノートの更新
+ */
+router.put('/note/update/:projectId', note.updateNote);
 /**
  * GET: Me
  */
