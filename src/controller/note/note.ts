@@ -13,9 +13,7 @@ const getNotes = async (req: express.Request, res: express.Response) => {
     const notes = await Note.find({ projectId: projectId });
 
     if (notes.length === 0) {
-      return res
-        .status(404)
-        .send({ message: '指定されたプロジェクトIDにノートが存在しません' });
+      return res.status(200).send([]);
     }
 
     res.status(200).send(notes);
