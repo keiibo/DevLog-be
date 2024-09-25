@@ -25,6 +25,28 @@ const getNotes = async (req: express.Request, res: express.Response) => {
 };
 
 /**
+ * 特定のノートを取得
+ */
+const getNoteByUuid = async (req: express.Request, res: express.Response) => {
+  try {
+    const { projectId, uuid } = req.params; // URLパラメータからprojectIdとnoteIdを取得
+
+    // 指定されたプロジェクトIDとnoteIdに一致するノートを取得
+    const note = await Note.findOne({ projectId: projectId, uuid: uuid });
+
+    if (!note) {
+      return res
+        .status(404)
+        .send({ message: '指定されたノートが見つかりません' });
+    }
+
+    res.status(200).send(note);
+  } catch (error: any) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+/**
  * ノートの新規作成
  */
 const postNote = async (req: express.Request, res: express.Response) => {
@@ -85,5 +107,6 @@ const updateNote = async (req: express.Request, res: express.Response) => {
 export default {
   getNotes,
   postNote,
-  updateNote
+  updateNote,
+  getNoteByUuid
 };

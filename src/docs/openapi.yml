@@ -574,6 +574,36 @@ paths:
           description: 指定されたプロジェクトIDにノートが存在しません。
         '500':
           description: サーバーエラーが発生しました。
+  /note/{projectId}/{uuid}:
+    get:
+      tags: ["Note"]
+      summary: 特定のノートを取得
+      description: 指定されたプロジェクトIDとUuidに一致するノートを取得します。
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+          description: ノートが属するプロジェクトのID。
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+          description: uuid
+      responses:
+        '200':
+          description: 正常にノートが取得されました。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '404':
+          description: 指定されたノートが見つかりません。
+        '500':
+          description: サーバーエラーが発生しました。
+  
   /note/create/{projectId}:
     post:
       tags: ['Note']

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 // Noteスキーマの定義
 const NoteSchema: Schema = new Schema({
@@ -29,8 +29,7 @@ const NoteSchema: Schema = new Schema({
     default: Date.now
   },
   body: {
-    type: String,
-    required: true
+    type: String
   }
 });
 

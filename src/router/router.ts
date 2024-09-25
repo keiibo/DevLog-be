@@ -88,6 +88,10 @@ router.delete('/detail/linkIcon/:projectId/:uuid', detail.deleteLinkIcon);
  */
 router.get('/note/:projectId', note.getNotes);
 /**
+ * GET:ノートの詳細取得
+ */
+router.get('/note/:projectId/:uuid', note.getNoteByUuid);
+/**
  * POST: ノートの新規作成
  */
 router.post('/note/create/:projectId', note.postNote);
