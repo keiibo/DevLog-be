@@ -576,7 +576,7 @@ paths:
           description: サーバーエラーが発生しました。
   /note/{projectId}/{uuid}:
     get:
-      tags: ["Note"]
+      tags: ['Note']
       summary: 特定のノートを取得
       description: 指定されたプロジェクトIDとUuidに一致するノートを取得します。
       parameters:
@@ -603,7 +603,26 @@ paths:
           description: 指定されたノートが見つかりません。
         '500':
           description: サーバーエラーが発生しました。
-  
+    delete:
+      tags: ['Note']
+      summary: '指定されたUUIDのノートを削除'
+      description: '指定されたプロジェクトIDとUUIDに基づいてノートを削除します。'
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: string
+          required: true
+          description: 'プロジェクトID'
+        - in: path
+          name: uuid
+          schema:
+            type: string
+          required: true
+          description: 'ノートのUUID'
+      responses:
+        '200':
+          description: 'ノートが正常に削除されました'
   /note/create/{projectId}:
     post:
       tags: ['Note']
@@ -650,7 +669,6 @@ paths:
           description: 入力が無効です。
         '500':
           description: サーバーエラーが発生しました。
-
   /note/update/{projectId}:
     put:
       tags: ['Note']

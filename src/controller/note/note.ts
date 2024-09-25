@@ -104,9 +104,38 @@ const updateNote = async (req: express.Request, res: express.Response) => {
   }
 };
 
+/**
+ * ノートの削除
+ */
+const deleteNote = async (req: express.Request, res: express.Response) => {
+  try {
+    const { projectId, uuid } = req.params; // URLからprojectIdとuuidを取得
+
+    // 指定されたプロジェクトIDとuuidに一致するノートを削除
+    const deletedNote = await Note.findOneAndDelete({
+      projectId: projectId,
+      uuid: uuid
+    });
+    console.log(deleteNote);
+
+    if (!deletedNote) {
+      return res
+        .status(404)
+        .send({ message: '指定されたノートが見つかりません' });
+    }
+
+    res
+      .status(200)
+      .send({ message: 'ノートが正常に削除されました', deletedNote });
+  } catch (error: any) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
 export default {
   getNotes,
   postNote,
   updateNote,
-  getNoteByUuid
+  getNoteByUuid,
+  deleteNote
 };

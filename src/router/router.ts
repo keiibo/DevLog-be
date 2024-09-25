@@ -100,6 +100,10 @@ router.post('/note/create/:projectId', note.postNote);
  */
 router.put('/note/update/:projectId', note.updateNote);
 /**
+ * DELETE: ノートの削除
+ */
+router.delete('/note/:projectId/:uuid', note.deleteNote);
+/**
  * GET: Me
  */
 router.get('/me', user.getUser);
