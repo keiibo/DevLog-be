@@ -114,8 +114,6 @@ const deleteNote = async (req: express.Request, res: express.Response) => {
       projectId: projectId,
       uuid: uuid
     });
-    console.log(deleteNote);
-
     if (!deletedNote) {
       return res
         .status(404)
