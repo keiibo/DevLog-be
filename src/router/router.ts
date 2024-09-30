@@ -7,6 +7,7 @@ import user from '../controller/user';
 import { authenticateToken } from '../middleWare/auth';
 import category from '../controller/ticket/category';
 import note from '../controller/note/note';
+import mileStone from '../controller/ticket/mileStone';
 
 const router = express.Router();
 /**
@@ -74,6 +75,14 @@ router.post('/tickets/category', category.syncCategories);
  * GET: チケットカテゴリの一覧取得
  */
 router.get('/tickets/category/:projectId', category.getCategories);
+/**
+ * GET: マイルストーンの一覧取得
+ */
+router.get('/tickets/mileStone/:projectId', mileStone.getMileStones);
+/**
+ * POST: マイルストーンの作成
+ */
+router.post('/tickets/mileStone', mileStone.createMileStone);
 /**
  * POST: リンクアイコンリストの作成
  */

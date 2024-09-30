@@ -58,6 +58,13 @@ const ticketSchema = new mongoose.Schema(
         name: { type: String, required: true }
       }
     ],
+    mileStone: {
+      type: {
+        uuid: { type: String, default: null },
+        name: { type: String, default: null }
+      },
+      default: null
+    },
     createdAt: { type: String },
     completedAt: { type: String }
   },
