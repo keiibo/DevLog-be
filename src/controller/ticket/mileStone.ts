@@ -99,4 +99,71 @@ const createMileStone = async (req: express.Request, res: express.Response) => {
   }
 };
 
-export default { createMileStone, getMileStones };
+/**
+ * マイルストーンの更新
+ */
+const updateMileStones = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  console.log('動作');
+  try {
+    const mileStonesToUpdate = req.body;
+
+    // バリデーションチェック
+    if (!Array.isArray(mileStonesToUpdate) || mileStonesToUpdate.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: '更新するマイルストーンの配列が必要です。'
+      });
+    }
+
+    // 更新処理
+    const updatePromises = mileStonesToUpdate.map(async (mileStone) => {
+      const { uuid, name, version } = mileStone;
+
+      // 個別のバリデーション
+      if (!uuid || !name || !version) {
+        throw new Error('UUID、名前、バージョンが必要です。');
+      }
+
+      // マイルストーンの存在確認と更新
+      const updatedMileStone = await MileStone.findOneAndUpdate(
+        { uuid },
+        { name, version },
+        { new: true } // 更新後のドキュメントを取得
+      );
+
+      if (!updatedMileStone) {
+        throw new Error(`マイルストーン（UUID: ${uuid}）が見つかりません。`);
+      }
+
+      // 関連するチケットのマイルストーン情報を更新
+      // await Ticket.updateMany(
+      //   { 'mileStone.uuid': uuid },
+      //   {
+      //     'mileStone.name': name,
+      //     'mileStone.version': version
+      //   }
+      // );
+
+      return updatedMileStone;
+    });
+
+    // すべての更新が完了するまで待機
+    const updatedMileStones = await Promise.all(updatePromises);
+
+    res.status(200).json({
+      success: true,
+      message: 'マイルストーンが更新されました。',
+      mileStones: updatedMileStones
+    });
+  } catch (error) {
+    console.error('Error updating milestones:', error);
+    res.status(500).json({
+      success: false,
+      message: '500 内部サーバーエラー'
+    });
+  }
+};
+export default { createMileStone, getMileStones, updateMileStones };

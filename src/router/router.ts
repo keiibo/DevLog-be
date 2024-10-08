@@ -84,6 +84,10 @@ router.get('/tickets/mileStone/:projectId', mileStone.getMileStones);
  */
 router.post('/tickets/mileStone', mileStone.createMileStone);
 /**
+ * PUT: マイルストーンの一括更新
+ */
+router.put('/mileStones/update', mileStone.updateMileStones);
+/**
  * POST: リンクアイコンリストの作成
  */
 router.post('/detail/linkIcon', detail.createOrUpdateLinkIconList);

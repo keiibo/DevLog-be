@@ -716,6 +716,38 @@ paths:
                   message:
                     type: string
                     example: '500 Internal Server Error'
+
+  /mileStones/update:
+    put:
+      tags: ['Ticket']
+      summary: 複数のマイルストーンを一括更新する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/MileStoneUpdate'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MileStoneUpdateResponse'
+        '400':
+          description: リクエストエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /note/{projectId}:
     get:
       tags: ['Note']
@@ -1162,7 +1194,70 @@ components:
         body:
           type: string
           description: ノートの本文。
-
+    MileStoneUpdate:
+      type: object
+      required:
+        - uuid
+        - name
+        - version
+      properties:
+        uuid:
+          type: string
+          description: マイルストーンのUUID
+        name:
+          type: string
+          description: マイルストーンの新しい名前
+        version:
+          type: string
+          description: マイルストーンの新しいバージョン
+    MileStone:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: マイルストーンのUUID
+        name:
+          type: string
+          description: マイルストーン名
+        version:
+          type: string
+          description: マイルストーンのバージョン
+        projectId:
+          type: string
+          description: プロジェクトID
+    MileStoneUpdateResult:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: マイルストーンのUUID
+        success:
+          type: boolean
+          description: 更新成功かどうか
+        mileStone:
+          $ref: '#/components/schemas/MileStone'
+        message:
+          type: string
+          description: エラーメッセージ（失敗時）
+    MileStoneUpdateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 全体の成功ステータス
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MileStoneUpdateResult'
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: エラーステータス（常にfalse）
+        message:
+          type: string
+          description: エラーメッセージ
   securitySchemes:
     Bearer:
       type: http
