@@ -19,22 +19,14 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       priority,
       status,
       categories,
-      mileStone,
+      mileStoneUuid,
       createdAt,
       completedAt
     } = req.body;
 
     const sequenceNumber = await getNextSequence(projectId);
     const ticketId = `${projectId}-${sequenceNumber}`;
-    let mileStoneData = null;
-    if (mileStone) {
-      mileStoneData = await MileStone.findOne({ uuid: mileStone });
-      if (!mileStoneData) {
-        return res
-          .status(404)
-          .send('指定されたマイルストーンが見つかりません。');
-      }
-    }
+
     const newTicket = new Ticket({
       // _id を指定せず、自動生成される ObjectId を利用
       ticketId, // カスタムフィールドとして ticketId を使用
@@ -48,9 +40,7 @@ const postTicket = async (req: express.Request, res: express.Response) => {
       priority,
       status,
       categories,
-      mileStone: mileStoneData
-        ? { uuid: mileStoneData.uuid, name: mileStoneData.name }
-        : null,
+      mileStoneUuid,
       createdAt,
       completedAt
     });
@@ -67,24 +57,7 @@ const postTicket = async (req: express.Request, res: express.Response) => {
 const updateTicket = async (req: express.Request, res: express.Response) => {
   try {
     const { ticketId } = req.params;
-    const { mileStone: mileStoneUuid, ...updateData } = req.body;
-
-    // マイルストーンがリクエストに含まれている場合の処理
-    if (mileStoneUuid) {
-      const mileStoneData = await MileStone.findOne({ uuid: mileStoneUuid });
-      if (!mileStoneData) {
-        return res.status(404).send('指定されたマイルストーンが見つかりません');
-      }
-      // 更新データにマイルストーンの情報を追加
-      updateData.mileStone = {
-        uuid: mileStoneData.uuid,
-        name: mileStoneData.name
-      };
-    }
-    // マイルストーンを外した場合もある
-    if (mileStoneUuid === null) {
-      updateData.mileStone = null;
-    }
+    const { ...updateData } = req.body;
 
     const updatedTicket = await Ticket.findOneAndUpdate(
       { ticketId: ticketId },

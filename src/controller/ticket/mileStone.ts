@@ -77,11 +77,7 @@ const createMileStone = async (req: express.Request, res: express.Response) => {
       await Ticket.updateMany(
         { ticketId: { $in: updateTicketIds } },
         {
-          mileStone: {
-            uuid: mileStone.uuid,
-            name: mileStone.name,
-            version: mileStone.version
-          }
+          mileStoneUuid: mileStone.uuid
         }
       );
     }
@@ -106,7 +102,6 @@ const updateMileStones = async (
   req: express.Request,
   res: express.Response
 ) => {
-  console.log('動作');
   try {
     const mileStonesToUpdate = req.body;
 
@@ -116,6 +111,35 @@ const updateMileStones = async (
         success: false,
         message: '更新するマイルストーンの配列が必要です。'
       });
+    }
+    // リクエストからのマイルストーンUUIDのリストを作成
+    const requestUuids = mileStonesToUpdate.map((mileStone) => mileStone.uuid);
+    console.log(requestUuids);
+
+    // 既存のマイルストーンのUUIDのリストを取得
+    const existingMileStones = await MileStone.find({
+      projectId: req.params.projectId
+    });
+    console.log(existingMileStones);
+
+    const existingUuids = existingMileStones.map((mileStone) => mileStone.uuid);
+    console.log(existingUuids);
+
+    // 削除対象のUUIDを特定（リクエストに含まれていないUUID）
+    const uuidsToDelete = existingUuids.filter(
+      (uuid) => !requestUuids.includes(uuid)
+    );
+    console.log(uuidsToDelete);
+
+    // 削除対象のマイルストーンを削除
+    if (uuidsToDelete.length > 0) {
+      await MileStone.deleteMany({ uuid: { $in: uuidsToDelete } });
+
+      // 削除されたマイルストーンを参照しているチケットの mileStoneUuid を null に更新
+      await Ticket.updateMany(
+        { mileStoneUuid: { $in: uuidsToDelete } },
+        { $set: { mileStoneUuid: null } }
+      );
     }
 
     // 更新処理
@@ -127,27 +151,29 @@ const updateMileStones = async (
         throw new Error('UUID、名前、バージョンが必要です。');
       }
 
-      // マイルストーンの存在確認と更新
-      const updatedMileStone = await MileStone.findOneAndUpdate(
-        { uuid },
-        { name, version },
-        { new: true } // 更新後のドキュメントを取得
-      );
+      // マイルストーンの存在確認
+      const existingMileStone = await MileStone.findOne({ uuid });
 
-      if (!updatedMileStone) {
-        throw new Error(`マイルストーン（UUID: ${uuid}）が見つかりません。`);
+      if (existingMileStone) {
+        // 既存のマイルストーンを更新
+        const updatedMileStone = await MileStone.findOneAndUpdate(
+          { uuid },
+          { name, version },
+          { new: true } // 更新後のドキュメントを取得
+        );
+
+        return updatedMileStone;
+      } else {
+        // 新しいマイルストーンを作成
+        const newMileStone = new MileStone({
+          uuid,
+          name,
+          version,
+          projectId: req.params.projectId
+        });
+        await newMileStone.save();
+        return newMileStone;
       }
-
-      // 関連するチケットのマイルストーン情報を更新
-      // await Ticket.updateMany(
-      //   { 'mileStone.uuid': uuid },
-      //   {
-      //     'mileStone.name': name,
-      //     'mileStone.version': version
-      //   }
-      // );
-
-      return updatedMileStone;
     });
 
     // すべての更新が完了するまで待機
