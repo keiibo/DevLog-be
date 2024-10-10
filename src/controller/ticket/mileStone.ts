@@ -147,8 +147,8 @@ const updateMileStones = async (
       const { uuid, name, version } = mileStone;
 
       // 個別のバリデーション
-      if (!uuid || !name || !version) {
-        throw new Error('UUID、名前、バージョンが必要です。');
+      if (!uuid || !name) {
+        throw new Error('UUID、名前が必要です。');
       }
 
       // マイルストーンの存在確認

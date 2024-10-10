@@ -11,7 +11,7 @@ const mileStoneSchema = new mongoose.Schema(
   {
     uuid: { type: String, required: true, unique: true },
     name: { type: String, required: true, unique: true },
-    version: { type: String, required: true },
+    version: { type: String },
     projectId: { type: String, required: true }
   },
   { collection: 'MileStone' }
