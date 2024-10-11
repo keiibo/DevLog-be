@@ -1,0 +1,21 @@
+tags: ['Ticket']
+summary: ticketIdからチケットの詳細を取得する
+description: ticketIdからチケットの詳細を取得する
+parameters:
+  - name: ticketId
+    in: path
+    required: true
+    description: チケットId
+    schema:
+      type: string
+responses:
+  '200':
+    description: 成功
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/tickets/Ticket.yml'
+  '400':
+    description: チケットIdが無効です
+  '500':
+    description: Internal server error

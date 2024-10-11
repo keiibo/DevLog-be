@@ -1,0 +1,12 @@
+type: object
+required:
+  - projectId
+  - categories
+properties:
+  projectId:
+    type: string
+    description: プロジェクトの一意識別子。
+  categories:
+    type: array
+    items:
+      $ref: './Category.yml'

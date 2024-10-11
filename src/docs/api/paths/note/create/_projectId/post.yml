@@ -1,0 +1,44 @@
+tags: ['Note']
+summary: 新規ノートの作成
+description: 指定されたプロジェクトに対して新しいノートを作成します。
+parameters:
+  - in: path
+    name: projectId
+    required: true
+    schema:
+      type: string
+    description: ノートが属するプロジェクトのID。
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          uuid:
+            type: string
+            description: ノート作成者のユニーク識別子。
+            example: '123e4567-e89b-12d3-a456-426614174000'
+          icon:
+            type: string
+            description: ノートに関連するアイコン。
+            example: 'note'
+          title:
+            type: string
+            description: ノートのタイトル。
+            example: '私の最初のノート'
+          body:
+            type: string
+            description: ノートの本文。
+            example: 'これはノートの本文です。'
+responses:
+  '201':
+    description: ノートが正常に作成されました。
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../components/schemas/note/Note.yml'
+  '400':
+    description: 入力が無効です。
+  '500':
+    description: サーバーエラーが発生しました。

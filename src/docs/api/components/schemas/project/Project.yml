@@ -1,0 +1,18 @@
+type: object
+properties:
+  _id:
+    type: string
+    description: プロジェクトのユニークなID
+  projectId:
+    type: string
+  userId:
+    type: string
+  name:
+    type: string
+    description: プロジェクト名
+  detail:
+    type: string
+    description: プロジェクト詳細
+  limitDate:
+    type: string
+    description: プロジェクトの期限日

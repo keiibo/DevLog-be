@@ -1,0 +1,41 @@
+type: object
+required:
+  - userName
+  - email
+  - passwordHash
+properties:
+  _id:
+    type: string
+    format: uuid
+    description: ユーザーの一意識別子
+    readOnly: true
+  userId:
+    type: string
+    format: uuid
+    description: ユーザーの一意識別子（_idと同一）
+    readOnly: true
+  userName:
+    type: string
+    description: ユーザーのユーザーネーム
+  email:
+    type: string
+    format: email
+    description: ユーザーのメールアドレス
+  passwordHash:
+    type: string
+    description: ユーザーのハッシュ化されたパスワード
+  createdAt:
+    type: string
+    format: date-time
+    description: ユーザー作成のタイムスタンプ
+    readOnly: true
+  updatedAt:
+    type: string
+    format: date-time
+    description: 最後の更新のタイムスタンプ
+    readOnly: true
+  lastLogin:
+    type: string
+    format: date-time
+    description: 最後のログインのタイムスタンプ
+    readOnly: true

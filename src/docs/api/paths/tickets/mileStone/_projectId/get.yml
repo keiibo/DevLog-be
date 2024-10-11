@@ -1,0 +1,75 @@
+tags: ['Ticket']
+summary: 指定されたプロジェクトの全てのマイルストーンを取得
+description: 指定された `projectId` に関連する全てのマイルストーンを取得します。
+parameters:
+  - name: projectId
+    in: path
+    required: true
+    description: マイルストーンを取得する対象のプロジェクトID。
+    schema:
+      type: string
+responses:
+  '200':
+    description: 指定されたプロジェクトに関連するマイルストーンのリスト。
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              uuid:
+                type: string
+                description: マイルストーンの一意の識別子。
+                example: 'abc-123-xyz'
+              name:
+                type: string
+                description: マイルストーンの名称。
+                example: 'スプリント1'
+              version:
+                type: string
+                description: マイルストーンのバージョン。
+                example: 'v1.0.0'
+              projectId:
+                type: string
+                description: このマイルストーンが属するプロジェクトのID。
+                example: '12345'
+  '400':
+    description: 無効な `projectId` が指定された場合。
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              example: false
+            message:
+              type: string
+              example: 'プロジェクトIDが必要です。'
+  '404':
+    description: 指定された `projectId` に関連するマイルストーンが見つからなかった場合。
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              example: false
+            message:
+              type: string
+              example: '指定されたプロジェクトIDに関連するマイルストーンは見つかりませんでした。'
+  '500':
+    description: サーバーエラー。
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              example: false
+            message:
+              type: string
+              example: '500 内部サーバーエラー'

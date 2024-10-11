@@ -1,0 +1,36 @@
+tags: ['User']
+summary: user新規作成
+description: userアカウントを新規作成する
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - userId
+          - userName
+          - password
+          - email
+        properties:
+          userId:
+            type: string
+            description: ユーザーID
+          userName:
+            type: string
+            description: ユーザーネーム
+          password:
+            type: string
+            description: ハッシュ化前の生パスワード
+          email:
+            type: string
+            description: email
+responses:
+  '200':
+    description: 'ユーザー作成成功時'
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/user/User.yml'
+  '500':
+    description: Internal server error

@@ -1,0 +1,18 @@
+tags: ['Ticket']
+summary: タスクチケットの新規作成
+description: チケットを新規作成する
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+        $ref: '../../components/schemas/tickets/TicketCreateRequest.yml'
+responses:
+  '200':
+    description: 'チケット作成成功時'
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/tickets/Ticket.yml'

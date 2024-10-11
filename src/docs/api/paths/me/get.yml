@@ -1,0 +1,12 @@
+tags: ['User']
+summary: user情報取得
+description: user情報を取得する
+responses:
+  '200':
+    description: 'ログインしているユーザー情報を取得する'
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/user/User.yml'
+  '500':
+    description: Internal server error

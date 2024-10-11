@@ -1,0 +1,43 @@
+summary: 新規プロジェクトの作成
+operationId: createProject
+tags:
+  - Project
+requestBody:
+  description: '新規作成するプロジェクトのデータ'
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - detail
+          - limitDate
+          - projectId
+          - userId
+        properties:
+          name:
+            type: string
+            description: 'プロジェクト名'
+          detail:
+            type: string
+            description: 'プロジェクトの詳細'
+          limitDate:
+            type: string
+            format: date
+            description: 'プロジェクトの期限日'
+          projectId:
+            type: string
+            description: 'プロジェクトのID'
+          userId:
+            type: string
+            description: 'ユーザーID'
+responses:
+  201:
+    description: 'プロジェクトが正常に作成されました。'
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/project/Project.yml'
+  400:
+    description: '無効なリクエストです。'

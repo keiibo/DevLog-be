@@ -1,0 +1,7 @@
+get:
+  tags: ['HealthCheck']
+  summary: ヘルスチェック
+  description: 正常に動作しているかを確認する.
+  responses:
+    200:
+      description: 正常

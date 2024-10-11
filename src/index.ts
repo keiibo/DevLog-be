@@ -32,7 +32,7 @@ app.use(cors(corsOptions));
 // DB接続
 connectDB(process.env.DB_URI);
 
-const swaggerDocument = YAML.load('src/docs/openapi.yml');
+const swaggerDocument = YAML.load('dist/bundle.yml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/', (req, res) => {

@@ -1,0 +1,16 @@
+type: object
+properties:
+  projectId:
+    type: string
+    description: The project ID to which these link icons belong.
+  linkIconList:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+        iconType:
+          type: string

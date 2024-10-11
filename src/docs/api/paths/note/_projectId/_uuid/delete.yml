@@ -1,0 +1,19 @@
+tags: ['Note']
+summary: '指定されたUUIDのノートを削除'
+description: '指定されたプロジェクトIDとUUIDに基づいてノートを削除します。'
+parameters:
+  - in: path
+    name: projectId
+    schema:
+      type: string
+    required: true
+    description: 'プロジェクトID'
+  - in: path
+    name: uuid
+    schema:
+      type: string
+    required: true
+    description: 'ノートのUUID'
+responses:
+  '200':
+    description: 'ノートが正常に削除されました'

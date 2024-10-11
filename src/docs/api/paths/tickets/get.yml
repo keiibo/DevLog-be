@@ -1,0 +1,29 @@
+tags: ['Ticket']
+summary: チケット一覧の取得
+description: projectIdに紐づくチケットを取得
+parameters:
+  - in: query
+    name: projectId
+    required: true
+    schema:
+      type: string
+    description: The project ID to retrieve tickets for.
+responses:
+  '200':
+    description: Successfully retrieved the tickets
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../components/schemas/tickets/Ticket.yml'
+  '404':
+    description: No tickets found for the specified project ID
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+              description: 'チケットが取得できませんでした'

@@ -1,0 +1,23 @@
+summary: ユーザーに紐づく全プロジェクトの一覧を取得
+operationId: listProjects
+tags:
+  - Project
+parameters:
+  - name: userId
+    in: path
+    required: true
+    description: ユーザーID
+    schema:
+      type: string
+
+responses:
+  '200':
+    description: プロジェクトの一覧が正常に取得されました。
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../../components/schemas/project/Project.yml'
+  '500':
+    description: 'サーバー側のエラーによりプロジェクトの一覧を取得できませんでした。'
