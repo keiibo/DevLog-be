@@ -1,0 +1,44 @@
+tags: ['Note']
+summary: 既存のノートの更新
+description: 指定されたプロジェクトのノートを更新します。
+parameters:
+  - in: path
+    name: projectId
+    required: true
+    schema:
+      type: string
+    description: ノートが属するプロジェクトのID。
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          uuid:
+            type: string
+            description: ノート作成者のユニーク識別子。
+            example: '123e4567-e89b-12d3-a456-426614174000'
+          icon:
+            type: string
+            description: ノートに関連するアイコン。
+            example: 'note'
+          title:
+            type: string
+            description: ノートのタイトル。
+            example: '更新されたノートのタイトル'
+          body:
+            type: string
+            description: ノートの更新された本文。
+            example: 'これは更新されたノートの本文です。'
+responses:
+  '200':
+    description: ノートが正常に更新されました。
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../components/schemas/note/Note.yml'
+  '404':
+    description: 指定されたノートが見つかりません。
+  '500':
+    description: サーバーエラーが発生しました。

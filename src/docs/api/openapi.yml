@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  title: DevLog API
+  description: DevLogで使用するAPI
+  version: '1.0'
+servers:
+  - url: http://localhost:4001/api
+    description: Production server
+security:
+  - Bearer: []
+
+paths:
+  /health-check:
+    $ref: './paths/healthCheck.yml'
+  /login:
+    $ref: './paths/login/index.yml'
+  /user:
+    $ref: './paths/user/index.yml'
+  /me:
+    $ref: './paths/me/index.yml'
+  /project/all/{userId}:
+    $ref: './paths/project/all/index.yml'
+  /project:
+    $ref: './paths/project/index.yml'
+  /project/{projectId}:
+    $ref: './paths/project/_id/index.yml'
+  /detail/linkIcon/{projectId}/{uuid}:
+    $ref: './paths/detail/linkIcon/_projectId/_uuid/index.yml'
+  /tickets:
+    $ref: './paths/tickets/index.yml'
+  /tickets/{ticketId}:
+    $ref: './paths/tickets/_id/index.yml'
+  /tickets/category/{projectId}:
+    $ref: './paths/tickets/category/_projectId/index.yml'
+  /tickets/mileStone/{projectId}:
+    $ref: './paths/tickets/mileStone/_projectId/index.yml'
+  /tickets/mileStone:
+    $ref: './paths/tickets/mileStone/index.yml'
+  /mileStones/update:
+    $ref: './paths/mileStones/update/index.yml'
+  /note/{projectId}:
+    $ref: './paths/note/_projectId/index.yml'
+  /note/{projectId}/{uuid}:
+    $ref: './paths/note/_projectId/_uuid/index.yml'
+  /note/create/{projectId}:
+    $ref: './paths/note/create/_projectId/index.yml'
+  /note/update/{projectId}:
+    $ref: './paths/note/update/_projectId/index.yml'
+
+components:
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

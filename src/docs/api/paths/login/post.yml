@@ -1,0 +1,54 @@
+tags: ['Login']
+summary: ログイン
+description: Emailかパスワードでログイン
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - identifier
+          - password
+        properties:
+          identifier:
+            type: string
+            description: email or id
+          password:
+            type: string
+            description: パスワード
+        example:
+          identifier: keibo@example.com
+          password: Keita1209
+responses:
+  '200':
+    description: ログイン成功
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            userId:
+              type: string
+              description: The user's unique identifier
+            userName:
+              type: string
+              description: The user's name
+            email:
+              type: string
+              description: The user's email address
+            projectIds:
+              type: array
+              items:
+                type: string
+          example:
+            userId: '12345'
+            userName: 'John Doe'
+            email: 'user@example.com'
+            projectIds: ['DVLG', 'DVLG2']
+  '401':
+    description: Unauthorized - Incorrect password or identifier
+  '404':
+    description: User not found
+  '500':
+    description: Server error

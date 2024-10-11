@@ -1,0 +1,25 @@
+type: object
+properties:
+  projectId:
+    type: string
+    description: ノートが属するプロジェクトのID。
+  uuid:
+    type: string
+    description: ノート作成者のユニーク識別子。
+  icon:
+    type: string
+    description: ノートに関連するアイコン。
+  title:
+    type: string
+    description: ノートのタイトル。
+  createdAt:
+    type: string
+    format: date-time
+    description: ノートが作成された日時。
+  updatedAt:
+    type: string
+    format: date-time
+    description: ノートが最後に更新された日時。
+  body:
+    type: string
+    description: ノートの本文。

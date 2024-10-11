@@ -1,0 +1,11 @@
+type: object
+required:
+  - uuid
+  - name
+properties:
+  uuid:
+    type: string
+    description: カテゴリの一意識別子。
+  name:
+    type: string
+    description: カテゴリ名。

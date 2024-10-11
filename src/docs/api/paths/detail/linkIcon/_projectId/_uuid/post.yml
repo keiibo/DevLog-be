@@ -1,0 +1,51 @@
+tags:
+  - LinkIcon
+summary: リンクアイコンの作成
+description: リンクアイコンを新規作成し保存する
+operationId: createLinkIcon
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          projectId:
+            type: string
+            description: The project ID to which these link icons belong.
+            example: 'DVLG'
+          linkIconList:
+            type: array
+            description: List of link icons.
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the link icon.
+                  example: 'GitHub'
+                url:
+                  type: string
+                  description: URL linked to the icon.
+                  example: 'https://github.com'
+                iconType:
+                  type: string
+                  description: Type of the icon.
+                  example: 'github'
+responses:
+  '201':
+    description: Successfully created a new link icon entry.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: 'Link icon entry created successfully.'
+            data:
+              $ref: '../../../../../components/schemas/detail/LinkIcon.yml'
+  '400':
+    description: Invalid input data.
+  '500':
+    description: Internal server error.

@@ -1,0 +1,34 @@
+summary: プロジェクトの更新
+description: プロジェクトの更新
+tags:
+  - Project
+parameters:
+  - name: projectId
+    in: path
+    required: true
+    schema:
+      type: string
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+          detail:
+            type: string
+responses:
+  '200':
+    description: Successfully updated the project
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/project/Project.yml'
+  '404':
+    description: Project not found
+  '403':
+    description: Unauthorized to update the project
+  '500':
+    description: Internal server error

@@ -1,0 +1,23 @@
+tags: ['Note']
+summary: プロジェクト内のすべてのノートを取得
+description: 指定されたプロジェクトIDに紐づくすべてのノートを取得します。
+parameters:
+  - in: path
+    name: projectId
+    required: true
+    schema:
+      type: string
+    description: ノートが属するプロジェクトのID。
+responses:
+  '200':
+    description: 正常にノートが取得されました。
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../../components/schemas/note/Note.yml'
+  '404':
+    description: 指定されたプロジェクトIDにノートが存在しません。
+  '500':
+    description: サーバーエラーが発生しました。

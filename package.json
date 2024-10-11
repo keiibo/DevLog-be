@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node ./src/index.ts",
     "start": "nodemon",
-    "lint": "eslint '**/*.{ts,tsx}'"
+    "lint": "eslint '**/*.{ts,tsx}'",
+    "api-bundle": "swagger-cli bundle src/docs/api/openapi.yml -o dist/bundle.yml -t yaml"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,8 @@
+type: object
+properties:
+  success:
+    type: boolean
+    description: エラーステータス（常にfalse）
+  message:
+    type: string
+    description: エラーメッセージ

@@ -1,0 +1,26 @@
+summary: カテゴリ一覧の取得
+tags: ['Ticket']
+description: プロジェクトIdを元にカテゴリ一覧を取得
+operationId: getCategories
+parameters:
+  - name: projectId
+    in: path
+    required: true
+    description: projectId
+    schema:
+      type: string
+responses:
+  '200':
+    description: カテゴリ一覧が正常に取得されました。
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../../../components/schemas/tickets/TicketCategories.yml'
+  '400':
+    description: プロジェクトIDが提供されていない場合のエラーレスポンス
+  '404':
+    description: 指定されたプロジェクトIDに関連するカテゴリが見つからない場合のエラーレスポンス
+  '500':
+    description: サーバー内部エラー

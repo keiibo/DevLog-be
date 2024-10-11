@@ -1,0 +1,29 @@
+tags: ['Ticket']
+summary: 複数のマイルストーンを一括更新する
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          $ref: '../../../components/schemas/mileStone/MileStoneUpdate.yml'
+responses:
+  '200':
+    description: 更新成功
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/mileStone/MileStoneUpdateResponse.yml'
+  '400':
+    description: リクエストエラー
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/mileStone/ErrorResponse.yml'
+  '500':
+    description: サーバーエラー
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/mileStone/ErrorResponse.yml'

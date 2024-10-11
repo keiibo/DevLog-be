@@ -4,16 +4,24 @@ info:
   description: DevLogで使用するAPI
   version: '1.0'
 servers:
-  - url: http://localhost:4001/api
+  - url: 'http://localhost:4001/api'
     description: Production server
 security:
   - Bearer: []
-
 paths:
-  # ユーザー
+  /health-check:
+    get:
+      tags:
+        - HealthCheck
+      summary: ヘルスチェック
+      description: 正常に動作しているかを確認する.
+      responses:
+        '200':
+          description: 正常
   /login:
     post:
-      tags: ['Login']
+      tags:
+        - Login
       summary: ログイン
       description: Emailかパスワードでログイン
       requestBody:
@@ -58,9 +66,11 @@ paths:
                       type: string
                 example:
                   userId: '12345'
-                  userName: 'John Doe'
-                  email: 'user@example.com'
-                  projectIds: ['DVLG', 'DVLG2']
+                  userName: John Doe
+                  email: user@example.com
+                  projectIds:
+                    - DVLG
+                    - DVLG2
         '401':
           description: Unauthorized - Incorrect password or identifier
         '404':
@@ -69,7 +79,8 @@ paths:
           description: Server error
   /user:
     post:
-      tags: ['User']
+      tags:
+        - User
       summary: user新規作成
       description: userアカウントを新規作成する
       requestBody:
@@ -98,40 +109,69 @@ paths:
                   description: email
       responses:
         '200':
-          description: 'ユーザー作成成功時'
+          description: ユーザー作成成功時
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/paths/~1me/get/responses/200/content/application~1json/schema'
         '500':
           description: Internal server error
   /me:
     get:
-      tags: ['User']
+      tags:
+        - User
       summary: user情報取得
       description: user情報を取得する
       responses:
         '200':
-          description: 'ログインしているユーザー情報を取得する'
+          description: ログインしているユーザー情報を取得する
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                type: object
+                required:
+                  - userName
+                  - email
+                  - passwordHash
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                    description: ユーザーの一意識別子
+                    readOnly: true
+                  userId:
+                    type: string
+                    format: uuid
+                    description: ユーザーの一意識別子（_idと同一）
+                    readOnly: true
+                  userName:
+                    type: string
+                    description: ユーザーのユーザーネーム
+                  email:
+                    type: string
+                    format: email
+                    description: ユーザーのメールアドレス
+                  passwordHash:
+                    type: string
+                    description: ユーザーのハッシュ化されたパスワード
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: ユーザー作成のタイムスタンプ
+                    readOnly: true
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: 最後の更新のタイムスタンプ
+                    readOnly: true
+                  lastLogin:
+                    type: string
+                    format: date-time
+                    description: 最後のログインのタイムスタンプ
+                    readOnly: true
         '500':
           description: Internal server error
-
-  # Health Check
-  /health-check:
-    get:
-      tags: ['HealthCheck']
-      summary: ヘルスチェック
-      description: 正常に動作しているかを確認する.
-      responses:
-        200:
-          description: 正常
-
-  # Project一覧の取得
-  /project/all/{userId}:
+  '/project/all/{userId}':
     get:
       summary: ユーザーに紐づく全プロジェクトの一覧を取得
       operationId: listProjects
@@ -144,7 +184,6 @@ paths:
           description: ユーザーID
           schema:
             type: string
-
       responses:
         '200':
           description: プロジェクトの一覧が正常に取得されました。
@@ -153,9 +192,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Project'
+                  $ref: '#/paths/~1project/post/responses/201/content/application~1json/schema'
         '500':
-          description: 'サーバー側のエラーによりプロジェクトの一覧を取得できませんでした。'
+          description: サーバー側のエラーによりプロジェクトの一覧を取得できませんでした。
   /project:
     post:
       summary: 新規プロジェクトの作成
@@ -163,7 +202,7 @@ paths:
       tags:
         - Project
       requestBody:
-        description: '新規作成するプロジェクトのデータ'
+        description: 新規作成するプロジェクトのデータ
         required: true
         content:
           application/json:
@@ -178,31 +217,47 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'プロジェクト名'
+                  description: プロジェクト名
                 detail:
                   type: string
-                  description: 'プロジェクトの詳細'
+                  description: プロジェクトの詳細
                 limitDate:
                   type: string
                   format: date
-                  description: 'プロジェクトの期限日'
+                  description: プロジェクトの期限日
                 projectId:
                   type: string
-                  description: 'プロジェクトのID'
+                  description: プロジェクトのID
                 userId:
                   type: string
-                  description: 'ユーザーID'
+                  description: ユーザーID
       responses:
-        201:
-          description: 'プロジェクトが正常に作成されました。'
+        '201':
+          description: プロジェクトが正常に作成されました。
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
-        400:
-          description: '無効なリクエストです。'
-  # PJの詳細取得
-  /project/{projectId}:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: プロジェクトのユニークなID
+                  projectId:
+                    type: string
+                  userId:
+                    type: string
+                  name:
+                    type: string
+                    description: プロジェクト名
+                  detail:
+                    type: string
+                    description: プロジェクト詳細
+                  limitDate:
+                    type: string
+                    description: プロジェクトの期限日
+        '400':
+          description: 無効なリクエストです。
+  '/project/{projectId}':
     get:
       summary: 指定されたプロジェクトの詳細が返されます
       operationId: getProject
@@ -221,7 +276,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
+                $ref: '#/paths/~1project/post/responses/201/content/application~1json/schema'
         '404':
           description: Project not found
     patch:
@@ -252,15 +307,81 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
-        '404':
-          description: Project not found
+                $ref: '#/paths/~1project/post/responses/201/content/application~1json/schema'
         '403':
           description: Unauthorized to update the project
+        '404':
+          description: Project not found
         '500':
           description: Internal server error
-  # 詳細のリンクアイコンの作成
-  /detail/linkIcon/{projectId}/{uuid}:
+  '/detail/linkIcon/{projectId}/{uuid}':
+    post:
+      tags:
+        - LinkIcon
+      summary: リンクアイコンの作成
+      description: リンクアイコンを新規作成し保存する
+      operationId: createLinkIcon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                  description: The project ID to which these link icons belong.
+                  example: DVLG
+                linkIconList:
+                  type: array
+                  description: List of link icons.
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the link icon.
+                        example: GitHub
+                      url:
+                        type: string
+                        description: URL linked to the icon.
+                        example: 'https://github.com'
+                      iconType:
+                        type: string
+                        description: Type of the icon.
+                        example: github
+      responses:
+        '201':
+          description: Successfully created a new link icon entry.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Link icon entry created successfully.
+                  data:
+                    type: object
+                    properties:
+                      projectId:
+                        type: string
+                        description: The project ID to which these link icons belong.
+                      linkIconList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            url:
+                              type: string
+                            iconType:
+                              type: string
+        '400':
+          description: Invalid input data.
+        '500':
+          description: Internal server error.
     delete:
       tags:
         - LinkIcon
@@ -292,7 +413,7 @@ paths:
                     type: string
                     example: リンクアイコンを正常に削除しました。
                   data:
-                    $ref: '#/components/schemas/LinkIcon'
+                    $ref: '#/paths/~1detail~1linkIcon~1%7BprojectId%7D~1%7Buuid%7D/post/responses/201/content/application~1json/schema/properties/data'
         '404':
           description: 指定された projectId または uuid のリンクアイコンが見つかりません。
           content:
@@ -313,83 +434,10 @@ paths:
                   message:
                     type: string
                     example: エラーメッセージの詳細
-    post:
-      tags:
-        - LinkIcon
-      summary: リンクアイコンの作成
-      description: リンクアイコンを新規作成し保存する
-      operationId: createLinkIcon
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                projectId:
-                  type: string
-                  description: The project ID to which these link icons belong.
-                  example: 'DVLG'
-                linkIconList:
-                  type: array
-                  description: List of link icons.
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the link icon.
-                        example: 'GitHub'
-                      url:
-                        type: string
-                        description: URL linked to the icon.
-                        example: 'https://github.com'
-                      iconType:
-                        type: string
-                        description: Type of the icon.
-                        example: 'github'
-      responses:
-        '201':
-          description: Successfully created a new link icon entry.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'Link icon entry created successfully.'
-                  data:
-                    $ref: '#/components/schemas/LinkIcon'
-        '400':
-          description: Invalid input data.
-        '500':
-          description: Internal server error.
-
-  #チケットの新規作成
   /tickets:
-    post:
-      tags: ['Ticket']
-      summary: タスクチケットの新規作成
-      description: チケットを新規作成する
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-              $ref: '#/components/schemas/TicketCreateRequest'
-      responses:
-        '200':
-          description: 'チケット作成成功時'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ticket'
-    # チケット全件取得
     get:
-      tags: ['Ticket']
+      tags:
+        - Ticket
       summary: チケット一覧の取得
       description: projectIdに紐づくチケットを取得
       parameters:
@@ -407,7 +455,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ticket'
+                  $ref: '#/paths/~1tickets/post/responses/200/content/application~1json/schema'
         '404':
           description: No tickets found for the specified project ID
           content:
@@ -417,10 +465,88 @@ paths:
                 properties:
                   error:
                     type: string
-                    description: 'チケットが取得できませんでした'
-  /tickets/{ticketId}:
+                    description: チケットが取得できませんでした
+    post:
+      tags:
+        - Ticket
+      summary: タスクチケットの新規作成
+      description: チケットを新規作成する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: null
+              required:
+                - projectId
+                - detail
+                - labelColorType
+                - title
+                - isDeletable
+                - priority
+                - status
+      responses:
+        '200':
+          description: チケット作成成功時
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - _id
+                  - projectId
+                  - ticketId
+                  - detail
+                  - labelColorType
+                  - title
+                  - isDeletable
+                  - priority
+                  - status
+                properties:
+                  _id:
+                    type: number
+                  projectId:
+                    type: string
+                  ticketId:
+                    type: string
+                  labelColorType:
+                    type: string
+                    enum:
+                      - white
+                      - lightBlue
+                      - blue
+                      - red
+                  title:
+                    type: string
+                  detail:
+                    type: string
+                  isDeletable:
+                    type: boolean
+                  limitStartYm:
+                    type: string
+                    format: date
+                    nullable: true
+                  limitEndYm:
+                    type: string
+                    format: date
+                    nullable: true
+                  priority:
+                    type: string
+                    enum:
+                      - high
+                      - medium
+                      - low
+                  status:
+                    type: string
+                    enum:
+                      - notStarted
+                      - underConstruction
+                      - completed
+  '/tickets/{ticketId}':
     get:
-      tags: ['Ticket']
+      tags:
+        - Ticket
       summary: ticketIdからチケットの詳細を取得する
       description: ticketIdからチケットの詳細を取得する
       parameters:
@@ -436,13 +562,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ticket'
+                $ref: '#/paths/~1tickets/post/responses/200/content/application~1json/schema'
         '400':
           description: チケットIdが無効です
         '500':
           description: Internal server error
     put:
-      tags: ['Ticket']
+      tags:
+        - Ticket
       summary: チケットの更新
       description: ticketIdからチケットを更新する
       parameters:
@@ -457,20 +584,64 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TicketUpdateRequest'
+              type: object
+              required:
+                - projectId
+                - detail
+                - labelColorType
+                - title
+                - isDeletable
+                - priority
+                - status
+              properties:
+                projectId:
+                  type: string
+                labelColorType:
+                  type: string
+                  enum:
+                    - white
+                    - lightBlue
+                    - blue
+                title:
+                  type: string
+                detail:
+                  type: string
+                isDeletable:
+                  type: boolean
+                limitStartYm:
+                  type: string
+                  format: date
+                  nullable: true
+                limitEndYm:
+                  type: string
+                  format: date
+                  nullable: true
+                priority:
+                  type: string
+                  enum:
+                    - high
+                    - medium
+                    - low
+                status:
+                  type: string
+                  enum:
+                    - notStarted
+                    - underConstruction
+                    - completed
       responses:
         '200':
           description: 成功
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ticket'
+                $ref: '#/paths/~1tickets/post/responses/200/content/application~1json/schema'
         '400':
           description: チケットIdが無効です
         '500':
           description: Internal server error
     delete:
-      tags: ['Ticket']
+      tags:
+        - Ticket
       summary: チケットの削除
       description: ticketIdからチケットを削除する
       parameters:
@@ -486,15 +657,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ticket'
+                $ref: '#/paths/~1tickets/post/responses/200/content/application~1json/schema'
         '400':
           description: チケットIdが無効です
         '500':
           description: Internal server error
-  /tickets/category/{projectId}:
+  '/tickets/category/{projectId}':
     get:
       summary: カテゴリ一覧の取得
-      tags: ['Ticket']
+      tags:
+        - Ticket
       description: プロジェクトIdを元にカテゴリ一覧を取得
       operationId: getCategories
       parameters:
@@ -512,7 +684,28 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TicketCategories'
+                  type: object
+                  required:
+                    - projectId
+                    - categories
+                  properties:
+                    projectId:
+                      type: string
+                      description: プロジェクトの一意識別子。
+                    categories:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - uuid
+                          - name
+                        properties:
+                          uuid:
+                            type: string
+                            description: カテゴリの一意識別子。
+                          name:
+                            type: string
+                            description: カテゴリ名。
         '400':
           description: プロジェクトIDが提供されていない場合のエラーレスポンス
         '404':
@@ -521,7 +714,8 @@ paths:
           description: サーバー内部エラー
     post:
       summary: カテゴリの配列を受け取り、データベースに保存
-      tags: ['Ticket']
+      tags:
+        - Ticket
       description: 画面から設定される一意のカテゴリを配列形式で受け取り、データベースに保存します。
       operationId: createCategories
       requestBody:
@@ -530,8 +724,8 @@ paths:
           application/json:
             schema:
               type: object
-              properties:
-              $ref: '#/components/schemas/TicketCategories'
+              properties: null
+              $ref: '#/paths/~1tickets~1category~1%7BprojectId%7D/get/responses/200/content/application~1json/schema/items'
       responses:
         '201':
           description: カテゴリが正常に作成されました。
@@ -548,9 +742,10 @@ paths:
           description: 不正なリクエストデータ。
         '500':
           description: サーバーエラー。
-  /tickets/mileStone/{projectId}:
+  '/tickets/mileStone/{projectId}':
     get:
-      tags: ['Ticket']
+      tags:
+        - Ticket
       summary: 指定されたプロジェクトの全てのマイルストーンを取得
       description: 指定された `projectId` に関連する全てのマイルストーンを取得します。
       parameters:
@@ -573,15 +768,15 @@ paths:
                     uuid:
                       type: string
                       description: マイルストーンの一意の識別子。
-                      example: 'abc-123-xyz'
+                      example: abc-123-xyz
                     name:
                       type: string
                       description: マイルストーンの名称。
-                      example: 'スプリント1'
+                      example: スプリント1
                     version:
                       type: string
                       description: マイルストーンのバージョン。
-                      example: 'v1.0.0'
+                      example: v1.0.0
                     projectId:
                       type: string
                       description: このマイルストーンが属するプロジェクトのID。
@@ -598,7 +793,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: 'プロジェクトIDが必要です。'
+                    example: プロジェクトIDが必要です。
         '404':
           description: 指定された `projectId` に関連するマイルストーンが見つからなかった場合。
           content:
@@ -611,7 +806,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: '指定されたプロジェクトIDに関連するマイルストーンは見つかりませんでした。'
+                    example: 指定されたプロジェクトIDに関連するマイルストーンは見つかりませんでした。
         '500':
           description: サーバーエラー。
           content:
@@ -624,10 +819,11 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: '500 内部サーバーエラー'
+                    example: 500 内部サーバーエラー
   /tickets/mileStone:
     post:
-      tags: ['Ticket']
+      tags:
+        - Ticket
       summary: マイルストーンの作成
       description: マイルストーンの作成
       requestBody:
@@ -655,27 +851,27 @@ paths:
                     uuid:
                       type: string
                       description: Unique identifier for the MileStone.
-                      example: 'abc-123-xyz'
+                      example: abc-123-xyz
                     name:
                       type: string
                       description: The name of the MileStone.
-                      example: 'Sprint 1'
+                      example: Sprint 1
                     version:
                       type: string
                       description: The version of the MileStone.
-                      example: 'v1.0.0'
+                      example: v1.0.0
                 updateTicketIds:
                   type: array
                   description: List of ticket IDs to be updated with the MileStone.
                   items:
                     type: string
                   example:
-                    - 'ticket1'
-                    - 'ticket2'
-                    - 'ticket3'
+                    - ticket1
+                    - ticket2
+                    - ticket3
       responses:
         '200':
-          description: Successful operation, MileStone and related tickets are updated.
+          description: 'Successful operation, MileStone and related tickets are updated.'
           content:
             application/json:
               schema:
@@ -702,7 +898,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: 'Project ID and MileStone must be provided.'
+                    example: Project ID and MileStone must be provided.
         '500':
           description: Server error.
           content:
@@ -715,11 +911,11 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: '500 Internal Server Error'
-
+                    example: 500 Internal Server Error
   /mileStones/update:
     put:
-      tags: ['Ticket']
+      tags:
+        - Ticket
       summary: 複数のマイルストーンを一括更新する
       requestBody:
         required: true
@@ -728,29 +924,84 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/MileStoneUpdate'
+                type: object
+                required:
+                  - uuid
+                  - name
+                  - version
+                properties:
+                  uuid:
+                    type: string
+                    description: マイルストーンのUUID
+                  name:
+                    type: string
+                    description: マイルストーンの新しい名前
+                  version:
+                    type: string
+                    description: マイルストーンの新しいバージョン
       responses:
         '200':
           description: 更新成功
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MileStoneUpdateResponse'
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: 全体の成功ステータス
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          description: マイルストーンのUUID
+                        success:
+                          type: boolean
+                          description: 更新成功かどうか
+                        mileStone:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              description: マイルストーンのUUID
+                            name:
+                              type: string
+                              description: マイルストーン名
+                            version:
+                              type: string
+                              description: マイルストーンのバージョン
+                            projectId:
+                              type: string
+                              description: プロジェクトID
+                        message:
+                          type: string
+                          description: エラーメッセージ（失敗時）
         '400':
           description: リクエストエラー
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: エラーステータス（常にfalse）
+                  message:
+                    type: string
+                    description: エラーメッセージ
         '500':
           description: サーバーエラー
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /note/{projectId}:
+                $ref: '#/paths/~1mileStones~1update/put/responses/400/content/application~1json/schema'
+  '/note/{projectId}':
     get:
-      tags: ['Note']
+      tags:
+        - Note
       summary: プロジェクト内のすべてのノートを取得
       description: 指定されたプロジェクトIDに紐づくすべてのノートを取得します。
       parameters:
@@ -768,14 +1019,15 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Note'
+                  $ref: '#/paths/~1note~1update~1%7BprojectId%7D/put/responses/200/content/application~1json/schema'
         '404':
           description: 指定されたプロジェクトIDにノートが存在しません。
         '500':
           description: サーバーエラーが発生しました。
-  /note/{projectId}/{uuid}:
+  '/note/{projectId}/{uuid}':
     get:
-      tags: ['Note']
+      tags:
+        - Note
       summary: 特定のノートを取得
       description: 指定されたプロジェクトIDとUuidに一致するノートを取得します。
       parameters:
@@ -797,34 +1049,36 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Note'
+                $ref: '#/paths/~1note~1update~1%7BprojectId%7D/put/responses/200/content/application~1json/schema'
         '404':
           description: 指定されたノートが見つかりません。
         '500':
           description: サーバーエラーが発生しました。
     delete:
-      tags: ['Note']
-      summary: '指定されたUUIDのノートを削除'
-      description: '指定されたプロジェクトIDとUUIDに基づいてノートを削除します。'
+      tags:
+        - Note
+      summary: 指定されたUUIDのノートを削除
+      description: 指定されたプロジェクトIDとUUIDに基づいてノートを削除します。
       parameters:
         - in: path
           name: projectId
           schema:
             type: string
           required: true
-          description: 'プロジェクトID'
+          description: プロジェクトID
         - in: path
           name: uuid
           schema:
             type: string
           required: true
-          description: 'ノートのUUID'
+          description: ノートのUUID
       responses:
         '200':
-          description: 'ノートが正常に削除されました'
-  /note/create/{projectId}:
+          description: ノートが正常に削除されました
+  '/note/create/{projectId}':
     post:
-      tags: ['Note']
+      tags:
+        - Note
       summary: 新規ノートの作成
       description: 指定されたプロジェクトに対して新しいノートを作成します。
       parameters:
@@ -844,33 +1098,34 @@ paths:
                 uuid:
                   type: string
                   description: ノート作成者のユニーク識別子。
-                  example: '123e4567-e89b-12d3-a456-426614174000'
+                  example: 123e4567-e89b-12d3-a456-426614174000
                 icon:
                   type: string
                   description: ノートに関連するアイコン。
-                  example: 'note'
+                  example: note
                 title:
                   type: string
                   description: ノートのタイトル。
-                  example: '私の最初のノート'
+                  example: 私の最初のノート
                 body:
                   type: string
                   description: ノートの本文。
-                  example: 'これはノートの本文です。'
+                  example: これはノートの本文です。
       responses:
         '201':
           description: ノートが正常に作成されました。
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Note'
+                $ref: '#/paths/~1note~1update~1%7BprojectId%7D/put/responses/200/content/application~1json/schema'
         '400':
           description: 入力が無効です。
         '500':
           description: サーバーエラーが発生しました。
-  /note/update/{projectId}:
+  '/note/update/{projectId}':
     put:
-      tags: ['Note']
+      tags:
+        - Note
       summary: 既存のノートの更新
       description: 指定されたプロジェクトのノートを更新します。
       parameters:
@@ -890,374 +1145,55 @@ paths:
                 uuid:
                   type: string
                   description: ノート作成者のユニーク識別子。
-                  example: '123e4567-e89b-12d3-a456-426614174000'
+                  example: 123e4567-e89b-12d3-a456-426614174000
                 icon:
                   type: string
                   description: ノートに関連するアイコン。
-                  example: 'note'
+                  example: note
                 title:
                   type: string
                   description: ノートのタイトル。
-                  example: '更新されたノートのタイトル'
+                  example: 更新されたノートのタイトル
                 body:
                   type: string
                   description: ノートの更新された本文。
-                  example: 'これは更新されたノートの本文です。'
+                  example: これは更新されたノートの本文です。
       responses:
         '200':
           description: ノートが正常に更新されました。
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Note'
+                type: object
+                properties:
+                  projectId:
+                    type: string
+                    description: ノートが属するプロジェクトのID。
+                  uuid:
+                    type: string
+                    description: ノート作成者のユニーク識別子。
+                  icon:
+                    type: string
+                    description: ノートに関連するアイコン。
+                  title:
+                    type: string
+                    description: ノートのタイトル。
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: ノートが作成された日時。
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: ノートが最後に更新された日時。
+                  body:
+                    type: string
+                    description: ノートの本文。
         '404':
           description: 指定されたノートが見つかりません。
         '500':
           description: サーバーエラーが発生しました。
-
 components:
-  schemas:
-    # ユーザー
-    User:
-      type: object
-      required:
-        - userName
-        - email
-        - passwordHash
-      properties:
-        _id:
-          type: string
-          format: uuid
-          description: ユーザーの一意識別子
-          readOnly: true
-        userId:
-          type: string
-          format: uuid
-          description: ユーザーの一意識別子（_idと同一）
-          readOnly: true
-        userName:
-          type: string
-          description: ユーザーのユーザーネーム
-        email:
-          type: string
-          format: email
-          description: ユーザーのメールアドレス
-        passwordHash:
-          type: string
-          description: ユーザーのハッシュ化されたパスワード
-        createdAt:
-          type: string
-          format: date-time
-          description: ユーザー作成のタイムスタンプ
-          readOnly: true
-        updatedAt:
-          type: string
-          format: date-time
-          description: 最後の更新のタイムスタンプ
-          readOnly: true
-        lastLogin:
-          type: string
-          format: date-time
-          description: 最後のログインのタイムスタンプ
-          readOnly: true
-    # プロジェクト
-    Project:
-      type: object
-      properties:
-        _id:
-          type: string
-          description: プロジェクトのユニークなID
-        projectId:
-          type: string
-        userId:
-          type: string
-        name:
-          type: string
-          description: プロジェクト名
-        detail:
-          type: string
-          description: プロジェクト詳細
-        limitDate:
-          type: string
-          description: プロジェクトの期限日
-    # チケット
-    Ticket:
-      type: object
-      required:
-        - _id
-        - projectId
-        - ticketId
-        - detail
-        - labelColorType
-        - title
-        - isDeletable
-        - priority
-        - status
-      properties:
-        _id:
-          type: number
-        projectId:
-          type: string
-        ticketId:
-          type: string
-        labelColorType:
-          type: string
-          enum:
-            - white
-            - lightBlue
-            - blue
-            - red
-        title:
-          type: string
-        detail:
-          type: string
-        isDeletable:
-          type: boolean
-        limitStartYm:
-          type: string
-          format: date
-          nullable: true
-        limitEndYm:
-          type: string
-          format: date
-          nullable: true
-        priority:
-          type: string
-          enum:
-            - high
-            - medium
-            - low
-        status:
-          type: string
-          enum:
-            - notStarted
-            - underConstruction
-            - completed
-    TicketCategories:
-      type: object
-      required:
-        - projectId
-        - categories
-      properties:
-        projectId:
-          type: string
-          description: プロジェクトの一意識別子。
-        categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/Category'
-    Category:
-      type: object
-      required:
-        - uuid
-        - name
-      properties:
-        uuid:
-          type: string
-          description: カテゴリの一意識別子。
-        name:
-          type: string
-          description: カテゴリ名。
-    TicketCreateRequest:
-      type: object
-      required:
-        - projectId
-        - detail
-        - labelColorType
-        - title
-        - isDeletable
-        - priority
-        - status
-      properties:
-        projectId:
-          type: string
-        labelColorType:
-          type: string
-          enum:
-            - white
-            - lightBlue
-            - blue
-            - red
-        title:
-          type: string
-        detail:
-          type: string
-        isDeletable:
-          type: boolean
-        limitStartYm:
-          type: string
-          format: date
-          nullable: true
-        limitEndYm:
-          type: string
-          format: date
-          nullable: true
-        priority:
-          type: string
-          enum:
-            - high
-            - medium
-            - low
-        status:
-          type: string
-          enum:
-            - notStarted
-            - underConstruction
-            - completed
-
-    TicketUpdateRequest:
-      type: object
-      required:
-        - projectId
-        - detail
-        - labelColorType
-        - title
-        - isDeletable
-        - priority
-        - status
-      properties:
-        projectId:
-          type: string
-        labelColorType:
-          type: string
-          enum:
-            - white
-            - lightBlue
-            - blue
-        title:
-          type: string
-        detail:
-          type: string
-        isDeletable:
-          type: boolean
-        limitStartYm:
-          type: string
-          format: date
-          nullable: true
-        limitEndYm:
-          type: string
-          format: date
-          nullable: true
-        priority:
-          type: string
-          enum:
-            - high
-            - medium
-            - low
-        status:
-          type: string
-          enum:
-            - notStarted
-            - underConstruction
-            - completed
-    LinkIcon:
-      type: object
-      properties:
-        projectId:
-          type: string
-          description: The project ID to which these link icons belong.
-        linkIconList:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              url:
-                type: string
-              iconType:
-                type: string
-
-    Note:
-      type: object
-      properties:
-        projectId:
-          type: string
-          description: ノートが属するプロジェクトのID。
-        uuid:
-          type: string
-          description: ノート作成者のユニーク識別子。
-        icon:
-          type: string
-          description: ノートに関連するアイコン。
-        title:
-          type: string
-          description: ノートのタイトル。
-        createdAt:
-          type: string
-          format: date-time
-          description: ノートが作成された日時。
-        updatedAt:
-          type: string
-          format: date-time
-          description: ノートが最後に更新された日時。
-        body:
-          type: string
-          description: ノートの本文。
-    MileStoneUpdate:
-      type: object
-      required:
-        - uuid
-        - name
-        - version
-      properties:
-        uuid:
-          type: string
-          description: マイルストーンのUUID
-        name:
-          type: string
-          description: マイルストーンの新しい名前
-        version:
-          type: string
-          description: マイルストーンの新しいバージョン
-    MileStone:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: マイルストーンのUUID
-        name:
-          type: string
-          description: マイルストーン名
-        version:
-          type: string
-          description: マイルストーンのバージョン
-        projectId:
-          type: string
-          description: プロジェクトID
-    MileStoneUpdateResult:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: マイルストーンのUUID
-        success:
-          type: boolean
-          description: 更新成功かどうか
-        mileStone:
-          $ref: '#/components/schemas/MileStone'
-        message:
-          type: string
-          description: エラーメッセージ（失敗時）
-    MileStoneUpdateResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 全体の成功ステータス
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MileStoneUpdateResult'
-    ErrorResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: エラーステータス（常にfalse）
-        message:
-          type: string
-          description: エラーメッセージ
   securitySchemes:
     Bearer:
       type: http

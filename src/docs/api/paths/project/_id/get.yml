@@ -1,0 +1,20 @@
+summary: 指定されたプロジェクトの詳細が返されます
+operationId: getProject
+tags:
+  - Project
+parameters:
+  - name: projectId
+    in: path
+    required: true
+    description: 取得したいプロジェクトのID。
+    schema:
+      type: string
+responses:
+  '200':
+    description: プロジェクトが返される
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/project/Project.yml'
+  '404':
+    description: Project not found

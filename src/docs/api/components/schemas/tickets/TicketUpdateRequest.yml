@@ -1,0 +1,44 @@
+type: object
+required:
+  - projectId
+  - detail
+  - labelColorType
+  - title
+  - isDeletable
+  - priority
+  - status
+properties:
+  projectId:
+    type: string
+  labelColorType:
+    type: string
+    enum:
+      - white
+      - lightBlue
+      - blue
+  title:
+    type: string
+  detail:
+    type: string
+  isDeletable:
+    type: boolean
+  limitStartYm:
+    type: string
+    format: date
+    nullable: true
+  limitEndYm:
+    type: string
+    format: date
+    nullable: true
+  priority:
+    type: string
+    enum:
+      - high
+      - medium
+      - low
+  status:
+    type: string
+    enum:
+      - notStarted
+      - underConstruction
+      - completed

@@ -1,0 +1,9 @@
+type: object
+properties:
+  success:
+    type: boolean
+    description: 全体の成功ステータス
+  results:
+    type: array
+    items:
+      $ref: '../MileStone/MileStoneUpdateResult.yml'

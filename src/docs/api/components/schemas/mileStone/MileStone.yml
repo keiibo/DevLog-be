@@ -1,0 +1,14 @@
+type: object
+properties:
+  uuid:
+    type: string
+    description: マイルストーンのUUID
+  name:
+    type: string
+    description: マイルストーン名
+  version:
+    type: string
+    description: マイルストーンのバージョン
+  projectId:
+    type: string
+    description: プロジェクトID

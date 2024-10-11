@@ -1,0 +1,51 @@
+tags:
+  - LinkIcon
+operationId: deleteLinkIcon
+summary: 特定のリンクアイコンを削除する
+description: プロジェクトのリンクアイコンリストから指定されたリンクアイコンを削除します。
+parameters:
+  - in: path
+    name: projectId
+    schema:
+      type: string
+    required: true
+    description: プロジェクトのID
+  - in: path
+    name: uuid
+    schema:
+      type: string
+    required: true
+    description: 削除するリンクアイコンのUUID
+responses:
+  '200':
+    description: リンクアイコンを正常に削除しました。
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: リンクアイコンを正常に削除しました。
+            data:
+              $ref: '../../../../../components/schemas/detail/LinkIcon.yml'
+  '404':
+    description: 指定された projectId または uuid のリンクアイコンが見つかりません。
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: 指定された uuid のリンクアイコンが見つかりません。
+  '500':
+    description: サーバー内部エラー
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: エラーメッセージの詳細

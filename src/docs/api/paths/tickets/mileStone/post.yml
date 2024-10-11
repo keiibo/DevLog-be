@@ -1,0 +1,89 @@
+tags: ['Ticket']
+summary: マイルストーンの作成
+description: マイルストーンの作成
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - projectId
+          - mileStone
+          - updateTicketIds
+        properties:
+          projectId:
+            type: string
+            description: The ID of the project.
+            example: '12345'
+          mileStone:
+            type: object
+            required:
+              - uuid
+              - name
+              - version
+            properties:
+              uuid:
+                type: string
+                description: Unique identifier for the MileStone.
+                example: 'abc-123-xyz'
+              name:
+                type: string
+                description: The name of the MileStone.
+                example: 'Sprint 1'
+              version:
+                type: string
+                description: The version of the MileStone.
+                example: 'v1.0.0'
+          updateTicketIds:
+            type: array
+            description: List of ticket IDs to be updated with the MileStone.
+            items:
+              type: string
+            example:
+              - 'ticket1'
+              - 'ticket2'
+              - 'ticket3'
+responses:
+  '200':
+    description: Successful operation, MileStone and related tickets are updated.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              example: true
+            message:
+              type: string
+              example: 'MileStone created/updated, and 3 tickets updated.'
+            projectId:
+              type: string
+              example: '12345'
+  '400':
+    description: Invalid input provided.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              example: false
+            message:
+              type: string
+              example: 'Project ID and MileStone must be provided.'
+  '500':
+    description: Server error.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              example: false
+            message:
+              type: string
+              example: '500 Internal Server Error'
