@@ -8,6 +8,7 @@ import { authenticateToken } from '../middleWare/auth';
 import category from '../controller/ticket/category';
 import note from '../controller/note/note';
 import mileStone from '../controller/ticket/mileStone';
+import template from '../controller/ticket/template';
 
 const router = express.Router();
 /**
@@ -87,6 +88,10 @@ router.post('/tickets/mileStone', mileStone.createMileStone);
  * PUT: マイルストーンの一括更新
  */
 router.put('/mileStones/update/:projectId', mileStone.updateMileStones);
+/**
+ * GET: テンプレートの取得
+ */
+router.get('/tickets/template/:projectId', template.getTemplates);
 /**
  * POST: リンクアイコンリストの作成
  */

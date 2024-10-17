@@ -1,0 +1,22 @@
+tags: ['Ticket']
+summary: テンプレートのリストを取得
+parameters:
+  - name: projectId
+    in: path
+    required: true
+    description: プロジェクトId
+    schema:
+      type: string
+responses:
+  '200':
+    description: テンプレートのリストが正常に取得されました。
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../../../components/schemas/template/Template.yml'
+  '400':
+    description: '不正なリクエスト'
+  '404':
+    description: 'テンプレートが見つかりませんでした'

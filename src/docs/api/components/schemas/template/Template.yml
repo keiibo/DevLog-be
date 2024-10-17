@@ -1,0 +1,18 @@
+type: object
+properties:
+  projectId:
+    type: string
+    description: 'プロジェクトのID'
+    example: '4643747546767'
+  uuid:
+    type: string
+    description: 'テンプレートのユニークな識別子'
+    example: 'fdsafdsaf'
+  title:
+    type: string
+    description: 'テンプレートのタイトル'
+    example: 'サンプルテンプレートのタイトル'
+  content:
+    type: string
+    description: 'テンプレートの内容'
+    example: 'これはテンプレートの内容です。'

@@ -38,6 +38,8 @@ paths:
     $ref: './paths/tickets/mileStone/index.yml'
   /mileStones/update:
     $ref: './paths/mileStones/update/index.yml'
+  /tickets/template/{projectId}:
+    $ref: './paths/tickets/template/_id/index.yml'
   /note/{projectId}:
     $ref: './paths/note/_projectId/index.yml'
   /note/{projectId}/{uuid}:

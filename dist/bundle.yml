@@ -998,6 +998,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/paths/~1mileStones~1update/put/responses/400/content/application~1json/schema'
+  '/tickets/template/{projectId}':
+    get:
+      tags:
+        - Ticket
+      summary: テンプレートのリストを取得
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: プロジェクトId
+          schema:
+            type: string
+      responses:
+        '200':
+          description: テンプレートのリストが正常に取得されました。
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    projectId:
+                      type: string
+                      description: プロジェクトのID
+                      example: '4643747546767'
+                    uuid:
+                      type: string
+                      description: テンプレートのユニークな識別子
+                      example: fdsafdsaf
+                    title:
+                      type: string
+                      description: テンプレートのタイトル
+                      example: サンプルテンプレートのタイトル
+                    content:
+                      type: string
+                      description: テンプレートの内容
+                      example: これはテンプレートの内容です。
+        '400':
+          description: 不正なリクエスト
+        '404':
+          description: テンプレートが見つかりませんでした
   '/note/{projectId}':
     get:
       tags:
