@@ -93,6 +93,10 @@ router.put('/mileStones/update/:projectId', mileStone.updateMileStones);
  */
 router.get('/tickets/template/:projectId', template.getTemplates);
 /**
+ * POST: テンプレートの取得
+ */
+router.post('/tickets/template/:projectId', template.createTemplate);
+/**
  * POST: リンクアイコンリストの作成
  */
 router.post('/detail/linkIcon', detail.createOrUpdateLinkIconList);

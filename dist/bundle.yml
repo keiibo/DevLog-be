@@ -1018,28 +1018,72 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    projectId:
-                      type: string
-                      description: プロジェクトのID
-                      example: '4643747546767'
-                    uuid:
-                      type: string
-                      description: テンプレートのユニークな識別子
-                      example: fdsafdsaf
-                    title:
-                      type: string
-                      description: テンプレートのタイトル
-                      example: サンプルテンプレートのタイトル
-                    content:
-                      type: string
-                      description: テンプレートの内容
-                      example: これはテンプレートの内容です。
+                  $ref: '#/paths/~1tickets~1template~1%7BprojectId%7D/post/responses/201/content/application~1json/schema'
         '400':
           description: 不正なリクエスト
         '404':
           description: テンプレートが見つかりませんでした
+    post:
+      tags:
+        - Ticket
+      summary: テンプレートの作成
+      description: 指定された `projectId` に基づいて新しいテンプレートを作成します。
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: プロジェクトのID
+          schema:
+            type: string
+            example: '4643747546767'
+      requestBody:
+        description: 作成するテンプレートの詳細を指定します。
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                  description: テンプレートのユニークな識別子
+                  example: fdsafdsaf
+                title:
+                  type: string
+                  description: テンプレートのタイトル
+                  example: 新規テンプレートのタイトル
+                content:
+                  type: string
+                  description: テンプレートの内容
+                  example: これは新しいテンプレートの内容です。
+      responses:
+        '201':
+          description: テンプレートが正常に作成されました。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: string
+                    description: プロジェクトのID
+                    example: '4643747546767'
+                  uuid:
+                    type: string
+                    description: テンプレートのユニークな識別子
+                    example: fdsafdsaf
+                  title:
+                    type: string
+                    description: テンプレートのタイトル
+                    example: サンプルテンプレートのタイトル
+                  content:
+                    type: string
+                    description: テンプレートの内容
+                    example: これはテンプレートの内容です。
+        '400':
+          description: 不正なリクエスト。必要な情報が不足しています。
+        '404':
+          description: 指定されたプロジェクトが見つかりませんでした。
   '/note/{projectId}':
     get:
       tags:
