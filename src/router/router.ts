@@ -97,6 +97,10 @@ router.get('/tickets/template/:projectId', template.getTemplates);
  */
 router.post('/tickets/template/:projectId', template.createTemplate);
 /**
+ * PUT: テンプレートの更新
+ */
+router.put('/tickets/template/:projectId', template.updateTemplate);
+/**
  * POST: リンクアイコンリストの作成
  */
 router.post('/detail/linkIcon', detail.createOrUpdateLinkIconList);
@@ -106,7 +110,6 @@ router.post('/detail/linkIcon', detail.createOrUpdateLinkIconList);
 router.delete('/detail/linkIcon/:projectId/:uuid', detail.deleteLinkIcon);
 /**
  * GET:ノートの全取得
- *
  */
 router.get('/note/:projectId', note.getNotes);
 /**

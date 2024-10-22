@@ -1,0 +1,65 @@
+tags: ['Ticket']
+summary: プロジェクトIDに基づいてテンプレートを更新
+description: 指定されたプロジェクトIDに基づいてテンプレートのタイトルや内容を更新します。
+parameters:
+  - name: projectId
+    in: path
+    required: true
+    description: 'テンプレートが関連するプロジェクトのID'
+    schema:
+      type: string
+      example: 'DVLG'
+requestBody:
+  description: 更新するテンプレートのデータを指定します。
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          uuid:
+            type: string
+            description: 'テンプレートのUUID (ユニーク識別子)'
+            example: '123-123-123'
+          title:
+            type: string
+            description: 'テンプレートの新しいタイトル'
+            example: '更新されたテンプレートタイトル'
+          content:
+            type: string
+            description: 'テンプレートの新しい内容'
+            example: 'これは更新されたテンプレートの内容です。'
+responses:
+  '200':
+    description: 'テンプレートが正常に更新されました。'
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: 'テンプレートのユニークな識別子 (ObjectId)'
+              example: '605c72ae4b604214b8a42e5f'
+            projectId:
+              type: string
+              description: 'プロジェクトのID'
+              example: '4643747546767'
+            uuid:
+              type: string
+              description: 'テンプレートのユニークな識別子'
+              example: 'fdsafdsaf'
+            title:
+              type: string
+              description: '更新されたテンプレートのタイトル'
+              example: '更新されたテンプレートタイトル'
+            content:
+              type: string
+              description: '更新されたテンプレートの内容'
+              example: 'これは更新されたテンプレートの内容です。'
+  '400':
+    description: '不正なリクエスト。必要な情報が不足しています。'
+  '404':
+    description: '指定されたプロジェクトIDまたはUUIDに基づくテンプレートが見つかりませんでした。'
+  '500':
+    description: '内部サーバーエラーが発生しました。'

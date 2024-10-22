@@ -81,4 +81,59 @@ const createTemplate = async (req: express.Request, res: express.Response) => {
   }
 };
 
-export default { getTemplates, createTemplate };
+/**
+ * テンプレートをプロジェクトIDとUUIDを元に更新する関数
+ */
+const updateTemplate = async (req: express.Request, res: express.Response) => {
+  try {
+    const { projectId } = req.params; // パスから projectId を取得
+    const { uuid, title, content } = req.body; // ボディから uuid, title, content を取得
+
+    // projectId または uuid が存在しない場合は400エラーレスポンスを返す
+    if (!projectId || !uuid) {
+      return res.status(400).json({
+        success: false,
+        message: 'プロジェクトIDとUUIDが必要です。'
+      });
+    }
+
+    // 更新するフィールドが存在しない場合は400エラーレスポンスを返す
+    if (!title && !content) {
+      return res.status(400).json({
+        success: false,
+        message: '更新する内容が必要です。'
+      });
+    }
+
+    // projectIdとuuidに基づいてテンプレートを検索し、更新
+    const updatedTemplate = await Template.findOneAndUpdate(
+      { projectId, uuid }, // 検索条件としてprojectIdとuuidを使用
+      { title, content }, // 更新内容
+      { new: true } // 新しい値を返すオプション
+    );
+
+    // テンプレートが見つからない場合、404エラーレスポンスを返す
+    if (!updatedTemplate) {
+      return res.status(404).json({
+        success: false,
+        message:
+          '指定されたプロジェクトIDまたはUUIDに関連するテンプレートが見つかりませんでした。'
+      });
+    }
+
+    // 成功レスポンスで更新されたテンプレートを返す
+    res.status(200).json({
+      success: true,
+      message: 'テンプレートが正常に更新されました。',
+      template: updatedTemplate
+    });
+  } catch (error) {
+    console.error('Error updating template:', error);
+    res.status(500).json({
+      success: false,
+      message: '500 内部サーバーエラー'
+    });
+  }
+};
+
+export default { getTemplates, createTemplate, updateTemplate };
