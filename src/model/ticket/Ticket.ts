@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Mongoose } from 'mongoose';
 
 // Enum 定義
 const LabelColorTypes = {
@@ -38,6 +38,7 @@ const Statuses = {
  */
 const ticketSchema = new mongoose.Schema(
   {
+    // _id: { type: mongoose.Types.ObjectId, required: true, unique: true },
     ticketId: { type: String, required: true, unique: true },
     projectId: { type: String, required: true },
     labelColorType: {

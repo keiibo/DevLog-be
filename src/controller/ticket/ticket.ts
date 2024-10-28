@@ -82,8 +82,15 @@ const getAllTickets = async (req: express.Request, res: express.Response) => {
     if (!projectId) {
       return res.status(400).send('プロジェクトIDが正しくありません');
     }
-    const tickets = await Ticket.find({ projectId: projectId });
-    res.status(200).send(tickets);
+    const tickets = await Ticket.find({ projectId: projectId }).lean();
+    const transformedTickets = tickets.map((ticket) => {
+      return {
+        ...ticket,
+        id: ticket._id.toString(), // ObjectIdを文字列に変換
+        _id: undefined // _idフィールドを削除
+      };
+    });
+    res.status(200).send(transformedTickets);
   } catch (error: any) {
     res.status(500).send(error.message);
   }
@@ -98,8 +105,18 @@ const getTicket = async (req: express.Request, res: express.Response) => {
     if (!ticketId) {
       return res.status(400).send('チケットIDが正しくありません');
     }
-    const ticket = await Ticket.findOne({ ticketId: ticketId });
-    res.status(200).send(ticket);
+    // lean()を使用してプレーンなオブジェクトに変換
+    const ticket = await Ticket.findOne({ ticketId: ticketId }).lean();
+    if (!ticket) {
+      return res.status(404).send('チケットが見つかりません');
+    }
+    // _idをidに変換
+    const transformedTicket = {
+      ...ticket,
+      id: ticket._id.toString(),
+      _id: undefined
+    };
+    res.status(200).send(transformedTicket);
   } catch (error: any) {
     res.status(500).send(error.message);
   }
