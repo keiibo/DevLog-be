@@ -19,15 +19,6 @@ const getTemplates = async (req: express.Request, res: express.Response) => {
     // プロジェクトIDに関連するマイルストーンをデータベースから取得
     const templates = await Template.find({ projectId });
 
-    // テンプレート一覧が見つからない場合、404エラーレスポンスを返す
-    if (templates.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message:
-          '指定されたプロジェクトIDに関連するマイルストーンは見つかりませんでした。'
-      });
-    }
-
     // 成功レスポンスでテンプレート一覧を返す
     res.status(200).json(templates);
   } catch (error) {
