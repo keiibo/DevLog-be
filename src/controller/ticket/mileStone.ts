@@ -20,14 +20,14 @@ const getMileStones = async (req: express.Request, res: express.Response) => {
     // プロジェクトIDに関連するマイルストーンをデータベースから取得
     const mileStones = await MileStone.find({ projectId });
 
-    // マイルストーンが見つからない場合、404エラーレスポンスを返す
-    if (mileStones.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message:
-          '指定されたプロジェクトIDに関連するマイルストーンは見つかりませんでした。'
-      });
-    }
+    // // マイルストーンが見つからない場合、404エラーレスポンスを返す
+    // if (mileStones.length === 0) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     message:
+    //       '指定されたプロジェクトIDに関連するマイルストーンは見つかりませんでした。'
+    //   });
+    // }
 
     // 成功レスポンスでマイルストーンを返す
     res.status(200).json(mileStones);
